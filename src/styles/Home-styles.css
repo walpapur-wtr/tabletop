@@ -1,0 +1,85 @@
+/* Home-styles.css */
+
+.home-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mobile-dice-roller-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #ff8c00;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.mobile-dice-roller-popup {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 100%;
+    max-width: 500px;
+    background-color: rgba(0, 0, 0, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: slide-in 0.3s ease-out;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .mobile-dice-roller-popup {
+        bottom: 70px;
+        right: 10px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .mobile-dice-roller-icon {
+        bottom: 10px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-dice-roller-popup .close-popup {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+}
