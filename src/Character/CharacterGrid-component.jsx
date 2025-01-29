@@ -1,6 +1,6 @@
 // CharacterGrid.js
 import React, { useState, useEffect } from "react";
-import { CharacterCard } from "./CharacterCaard-component";
+import { CharacterCard } from "./CharacterCard-component";
 import { CharacterForm } from "./CharacterForm-component";
 import "./Character-styles.css";
 
