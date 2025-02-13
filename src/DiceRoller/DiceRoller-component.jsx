@@ -52,9 +52,10 @@ const DiceRollerComponent = () => {
     try {
       const roll = roller.roll("2d20kh1");
       const rollData = {
-        formula: "Кидок з перевагою (2d20kh1)",
+        formula: "2d20kh1",
         rolls: roll.rolls.flat(),
         total: roll.total,
+        allRolls: roll.rolls, // Зберігаємо обидва результати
       };
       setLastRoll(rollData);
       sendRollToServer(rollData);
@@ -67,9 +68,10 @@ const DiceRollerComponent = () => {
     try {
       const roll = roller.roll("2d20kl1");
       const rollData = {
-        formula: "Кидок з перешкодою (2d20kl1)",
+        formula: "2d20kl1",
         rolls: roll.rolls.flat(),
         total: roll.total,
+        allRolls: roll.rolls, // Зберігаємо обидва результати
       };
       setLastRoll(rollData);
       sendRollToServer(rollData);
@@ -87,6 +89,7 @@ const DiceRollerComponent = () => {
         formula: roll.notation,
         rolls: roll.rolls.flat(),
         total: roll.total,
+        allRolls: lastRoll.allRolls, // Зберігаємо обидва результати
       };
       setLastRoll(rollData);
       sendRollToServer(rollData);

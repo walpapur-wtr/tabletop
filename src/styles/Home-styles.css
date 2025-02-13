@@ -42,6 +42,8 @@
     align-items: center;
     animation: slide-in 0.3s ease-out;
     box-sizing: border-box;
+    left: auto;
+    transform: none;
 }
 
 @media (max-width: 600px) {
@@ -50,6 +52,8 @@
         right: 10px;
         padding: 10px;
         border-radius: 8px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .mobile-dice-roller-icon {
