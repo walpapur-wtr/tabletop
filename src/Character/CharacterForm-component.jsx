@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { DiceRoller } from "rpg-dice-roller";
+//import { DiceRoller } from "rpg-dice-roller";
 import "./Character-styles.css";
 
 export const CharacterForm = ({ onSubmit, onCancel }) => {
-  const roller = new DiceRoller();
+  //const roller = new DiceRoller();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,19 +29,19 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
     }));
   };
 
-  const rollStat = (stat) => {
-    const roll = roller.roll("4d6"); // Кидаємо 4 кубики d6
-    const diceResults = roll.rolls[0].rolls.map(die => die.value); // Отримуємо масив чисел з об'єктів
+  // const rollStat = (stat) => {
+  //   const roll = roller.roll("4d6"); // Кидаємо 4 кубики d6
+  //   const diceResults = roll.rolls[0].rolls.map(die => die.value); // Отримуємо масив чисел з об'єктів
   
-    console.log(`Rolls for ${stat}:`, diceResults);
+  //   console.log(`Rolls for ${stat}:`, diceResults);
   
-    const sortedDice = diceResults.sort((a, b) => a - b).slice(1); // Видаляємо найменший результат
-    const statValue = sortedDice.reduce((sum, val) => sum + val, 0); // Обчислюємо суму 3 найбільших
+  //   const sortedDice = diceResults.sort((a, b) => a - b).slice(1); // Видаляємо найменший результат
+  //   const statValue = sortedDice.reduce((sum, val) => sum + val, 0); // Обчислюємо суму 3 найбільших
 
-    console.log(`Final ${stat} value:`, statValue); // Лог для перевірки
+  //   console.log(`Final ${stat} value:`, statValue); // Лог для перевірки
   
-    setFormData((prev) => ({ ...prev, [stat]: statValue })); // Записуємо лише підсумкове значення
-  };
+  //   setFormData((prev) => ({ ...prev, [stat]: statValue })); // Записуємо лише підсумкове значення
+  // };
 
 
 
@@ -106,7 +106,7 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
           />
           <button
             type="button"
-            onClick={() => rollStat(stat)}
+            //onClick={() => rollStat(stat)}
             className="character-form__button character-form__button--roll"
           >
             Roll

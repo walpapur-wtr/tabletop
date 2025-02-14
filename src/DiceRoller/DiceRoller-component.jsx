@@ -1,101 +1,80 @@
 import React, { useState } from "react";
-import { DiceRoller } from "rpg-dice-roller";
 import { FaDiceD20 } from "react-icons/fa";
+import RollHistoryComponent from "./RollStats/RollHistory-component";
 import "./DiceRoller-styles.css";
+import { rollDice } from "./Roll-script";
 
 const DiceRollerComponent = () => {
   const [modifier, setModifier] = useState(0);
   const [customFormula, setCustomFormula] = useState("");
   const [lastRoll, setLastRoll] = useState(null);
-  const roller = new DiceRoller();
+  const [history, setHistory] = useState([]);
+  const [isHistoryVisible, setHistoryVisible] = useState(false);
 
   const addDiceToFormula = (diceType) => {
-    setCustomFormula((prev) => (prev ? `${prev} + ${diceType}` : diceType));
+    setCustomFormula((prev) => {
+      const regex = new RegExp(`(\\d*)${diceType}`);
+      const match = prev.match(regex);
+
+      if (match) {
+        const count = parseInt(match[1] || "1", 10) + 1;
+        return prev.replace(regex, `${count}${diceType}`);
+      } else {
+        return prev ? `${prev} + 1${diceType}` : `1${diceType}`;
+      }
+    });
   };
 
-  const sendRollToServer = async (rollData) => {
-    try {
-      await fetch("http://127.1.3.202:3000/rolls", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(rollData),
-      });
-    } catch (error) {
-      console.error("Помилка при відправці даних на сервер:", error);
-    }
-  };
-
-  const handleRoll = () => {
+  const handleRoll = async () => {
     if (!customFormula) return;
 
     let formula = customFormula;
     if (modifier) formula += `${modifier >= 0 ? " + " : " "}${modifier}`;
 
-    try {
-      const roll = roller.roll(formula);
-      const rollData = {
-        formula: roll.notation,
-        rolls: roll.rolls.flat(),
-        total: roll.total,
-      };
+    const rollData = await rollDice(formula);
+    if (rollData) {
       setLastRoll(rollData);
-      sendRollToServer(rollData);
+      setHistory((prev) => [rollData, ...prev]);
       setCustomFormula(""); // Clear formula after rolling
-    } catch (error) {
-      console.error("Error performing roll: ", error);
     }
   };
 
-  const handleAdvantageRoll = () => {
-    try {
-      const roll = roller.roll("2d20kh1");
-      const rollData = {
-        formula: "2d20kh1",
-        rolls: roll.rolls.flat(),
-        total: roll.total,
-        allRolls: roll.rolls, // Зберігаємо обидва результати
-      };
+  const handleAdvantageRoll = async () => {
+    const rollData = await rollDice("2d20kh1");
+    if (rollData) {
       setLastRoll(rollData);
-      sendRollToServer(rollData);
-    } catch (error) {
-      console.error("Error performing advantage roll: ", error);
+      setHistory((prev) => [rollData, ...prev]);
     }
   };
 
-  const handleDisadvantageRoll = () => {
-    try {
-      const roll = roller.roll("2d20kl1");
-      const rollData = {
-        formula: "2d20kl1",
-        rolls: roll.rolls.flat(),
-        total: roll.total,
-        allRolls: roll.rolls, // Зберігаємо обидва результати
-      };
+  const handleDisadvantageRoll = async () => {
+    const rollData = await rollDice("2d20kl1");
+    if (rollData) {
       setLastRoll(rollData);
-      sendRollToServer(rollData);
-    } catch (error) {
-      console.error("Error performing disadvantage roll: ", error);
+      setHistory((prev) => [rollData, ...prev]);
     }
   };
 
-  const repeatLastRoll = () => {
+  const repeatLastRoll = async () => {
     if (!lastRoll) return;
 
-    try {
-      const roll = roller.roll(lastRoll.formula);
-      const rollData = {
-        formula: roll.notation,
-        rolls: roll.rolls.flat(),
-        total: roll.total,
-        allRolls: lastRoll.allRolls, // Зберігаємо обидва результати
-      };
+    const rollData = await rollDice(lastRoll.formula);
+    if (rollData) {
       setLastRoll(rollData);
-      sendRollToServer(rollData);
-    } catch (error) {
-      console.error("Error repeating roll: ", error);
+      setHistory((prev) => [rollData, ...prev]);
     }
+  };
+
+  const deleteRoll = (index) => {
+    setHistory((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateModifier = (newModifier) => {
+    setModifier(newModifier);
+    setCustomFormula((prev) => {
+      const formulaWithoutModifier = prev.replace(/ \+ \d+$/, "").replace(/ - \d+$/, "");
+      return formulaWithoutModifier;
+    });
   };
 
   return (
@@ -119,18 +98,18 @@ const DiceRollerComponent = () => {
             className="dice-roller__modifier-field"
             type="text"
             value={modifier}
-            onChange={(e) => setModifier(parseInt(e.target.value, 10) || 0)}
+            onChange={(e) => updateModifier(parseInt(e.target.value, 10) || 0)}
             placeholder="0"
           />
           <button
             className="dice-roller__modifier-button"
-            onClick={() => setModifier((prev) => prev - 1)}
+            onClick={() => updateModifier(modifier - 1)}
           >
             -1
           </button>
           <button
             className="dice-roller__modifier-button"
-            onClick={() => setModifier((prev) => prev + 1)}
+            onClick={() => updateModifier(modifier + 1)}
           >
             +1
           </button>
@@ -170,28 +149,39 @@ const DiceRollerComponent = () => {
 
       {lastRoll && (
         <div className="dice-roller__last-roll">
-          <p>
-            Результат останнього кидка: 
-          </p>
-          <div className="dice-roller__last-roll-section" >
-          <strong className="dice-roller__last-roll-result">
-            {lastRoll.total}
-          </strong>
+          <p>Результат останнього кидка:</p>
+          <div className="dice-roller__last-roll-section">
+            <strong className="dice-roller__last-roll-result">
+              {lastRoll.total}
+            </strong>
             <div className="dice-roller__last-roll-buttons">
-            <button
-              className="dice-roller__reroll-button"
-              onClick={repeatLastRoll}
-            >
-              Повторити кидок
-            </button>
-            <button
-              className="dice-roller__history-button"
-              onClick={repeatLastRoll}
-            >
-              Історія кидків
-            </button>
+              <button
+                className="dice-roller__reroll-button"
+                onClick={repeatLastRoll}
+              >
+                Повторити кидок
+              </button>
+              <button
+                className="dice-roller__history-button"
+                onClick={() => setHistoryVisible(true)}
+              >
+                Історія кидків
+              </button>
+            </div>
           </div>
-          </div>
+        </div>
+      )}
+
+      {isHistoryVisible && (
+        <div className="roll-history-popup">
+          <button className="close-popup" onClick={() => setHistoryVisible(false)}>
+            ✖
+          </button>
+          <RollHistoryComponent
+            history={history}
+            onDelete={deleteRoll}
+            onRepeat={repeatLastRoll}
+          />
         </div>
       )}
     </div>

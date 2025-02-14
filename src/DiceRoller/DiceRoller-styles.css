@@ -128,3 +128,15 @@
     padding: 0.5rem;
     cursor: pointer;
 }
+
+.roll-history-popup .close-popup {
+    position: absolute;
+    top: -30px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+  }
+  
