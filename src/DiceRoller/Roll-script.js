@@ -12,26 +12,65 @@ const rollDice = async (formula) => {
 };
 
 const parseFormula = (formula) => {
-  const advMatch = formula.match(/adv\((\d+d\d+)\)/);
-  const disadvMatch = formula.match(/disadv\((\d+d\d+)\)/);
+  const advMatch = formula.match(/adv\(([^)]+)\)/);
+  const disadvMatch = formula.match(/disadv\(([^)]+)\)/);
 
   if (advMatch) {
-    return handleAdvantageRoll(advMatch[1]);
+    validateAdvDisadvFormula(advMatch[1]);
+    return handleAdvDisadvRoll(advMatch[1], "adv", formula);
   } else if (disadvMatch) {
-    return handleDisadvantageRoll(disadvMatch[1]);
+    validateAdvDisadvFormula(disadvMatch[1]);
+    return handleAdvDisadvRoll(disadvMatch[1], "disadv", formula);
   } else {
     return handleStandardRoll(formula);
   }
 };
 
+const handleAdvDisadvRoll = (mainFormula, type, fullFormula) => {
+  const additionalParts = fullFormula.replace(`${type}(${mainFormula})`, "").split("+").map(part => part.trim()).filter(Boolean);
+  const mainRoll = type === "adv" ? handleAdvantageRoll(mainFormula) : handleDisadvantageRoll(mainFormula);
+  const additionalRolls = additionalParts.map(part => handleStandardRoll(part));
+
+  const total = additionalRolls.reduce((sum, roll) => sum + roll.total, mainRoll.total);
+  const rolls = [mainRoll, ...additionalRolls].flatMap(roll => roll.rolls);
+
+  return {
+    formula: fullFormula,
+    rolls,
+    total,
+    date: new Date().toISOString(),
+  };
+};
+
+const validateAdvDisadvFormula = (formula) => {
+  const parts = formula.split("+").map(part => part.trim());
+  const diceParts = parts.filter(part => part.includes("d"));
+
+  if (diceParts.length !== 1) {
+    throw new Error("Формула некоректна, використовуйте лише 1 тип кубиків при кидку переваги чи перешкоди");
+  }
+};
+
 const handleStandardRoll = (formula) => {
   const parts = formula.split("+").map(part => part.trim());
-  const rolls = parts.map(part => rollSingleDice(part));
-  const total = rolls.reduce((sum, roll) => sum + roll.total, 0);
+  const rolls = [];
+  let total = 0;
+
+  parts.forEach(part => {
+    if (part.includes("d")) {
+      const roll = rollSingleDice(part);
+      rolls.push(...roll.rolls);
+      total += roll.total;
+    } else {
+      const modifier = parseInt(part, 10);
+      total += modifier;
+      rolls.push({ value: modifier, isModifier: true });
+    }
+  });
 
   return {
     formula,
-    rolls: rolls.flatMap(roll => roll.rolls),
+    rolls,
     total,
     date: new Date().toISOString(),
   };
