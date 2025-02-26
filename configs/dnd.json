@@ -1,0 +1,14 @@
+{
+  "fields": [
+    { "name": "name", "label": "Name", "type": "text", "required": true },
+    { "name": "level", "label": "Level", "type": "number", "required": true },
+    { "name": "class", "label": "Class", "type": "text", "required": true },
+    { "name": "race", "label": "Race", "type": "text", "required": true },
+    { "name": "strength", "label": "Strength", "type": "number", "required": true },
+    { "name": "dexterity", "label": "Dexterity", "type": "number", "required": true },
+    { "name": "constitution", "label": "Constitution", "type": "number", "required": true },
+    { "name": "intelligence", "label": "Intelligence", "type": "number", "required": true },
+    { "name": "wisdom", "label": "Wisdom", "type": "number", "required": true },
+    { "name": "charisma", "label": "Charisma", "type": "number", "required": true }
+  ]
+}
