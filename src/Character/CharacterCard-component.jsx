@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Character-styles.css";
+import "./CharacterGrid-styles.css";
 
 export const CharacterCard = ({ character, onAddClick }) => {
   if (!character) {

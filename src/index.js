@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/Home-page.jsx";
-import CharacterSheet from "./Character/CharacterSheet-component.jsx";
 import AuthPage from "./Login/LoginSignup-page.jsx";
+import CharacterPage from "./Character/CharacterSheet/CharacterSheet-page.jsx";
 import App from './App';
 import "./index.css";
 
@@ -19,5 +19,3 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
-
-

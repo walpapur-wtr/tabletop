@@ -1,25 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React from "react";
 
-const CharacterSheet = () => {
-  const { name } = useParams();
-  const [character, setCharacter] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`/api/characters/${name}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCharacter(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Помилка завантаження персонажа:", err);
-        setLoading(false);
-      });
-  }, [name]);
-
-  if (loading) return <p>Завантаження...</p>;
+const CharacterSheet = ({ character }) => {
   if (!character) return <p>Персонаж не знайдений.</p>;
 
   return (

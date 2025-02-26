@@ -1,116 +1,79 @@
-import React, { useState } from "react";
-//import { DiceRoller } from "rpg-dice-roller";
-import "./Character-styles.css";
+import React, { useState, useEffect } from "react";
+import "./CharacterGrid-styles.css";
 
 export const CharacterForm = ({ onSubmit, onCancel }) => {
-  //const roller = new DiceRoller();
+  const [formData, setFormData] = useState({});
+  const [fields, setFields] = useState([]);
+  const [system, setSystem] = useState("dnd");
+  const [errors, setErrors] = useState({});
 
-  const [formData, setFormData] = useState({
-    name: "",
-    level: "",
-    class: "",
-    race: "",
-    image: "",
-    strength: "",
-    dexterity: "",
-    constitution: "",
-    intelligence: "",
-    wisdom: "",
-    charisma: ""
-  });
+  useEffect(() => {
+    // Завантаження конфігураційного файлу для вибраної системи
+    console.log(`Loading config for system: ${system}`);
+    import(`../configs/${system}.json`)
+      .then((config) => {
+        console.log("Config loaded:", config);
+        setFields(config.fields);
+        setErrors({});
+      })
+      .catch((err) => {
+        console.error("Error loading config:", err);
+        setErrors((prev) => ({
+          ...prev,
+          system: "Невідома система.",
+        }));
+      });
+  }, [system]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: ["level", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].includes(name)
-        ? Number(value) || ""
-        : value,
+      [name]: value,
     }));
   };
 
-  // const rollStat = (stat) => {
-  //   const roll = roller.roll("4d6"); // Кидаємо 4 кубики d6
-  //   const diceResults = roll.rolls[0].rolls.map(die => die.value); // Отримуємо масив чисел з об'єктів
-  
-  //   console.log(`Rolls for ${stat}:`, diceResults);
-  
-  //   const sortedDice = diceResults.sort((a, b) => a - b).slice(1); // Видаляємо найменший результат
-  //   const statValue = sortedDice.reduce((sum, val) => sum + val, 0); // Обчислюємо суму 3 найбільших
-
-  //   console.log(`Final ${stat} value:`, statValue); // Лог для перевірки
-  
-  //   setFormData((prev) => ({ ...prev, [stat]: statValue })); // Записуємо лише підсумкове значення
-  // };
-
-
-
+  const validateForm = () => {
+    const newErrors = {};
+    fields.forEach((field) => {
+      if (field.required && !formData[field.name]) {
+        newErrors[field.name] = `Поле ${field.label} є обов'язковим.`;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (validateForm()) {
+      onSubmit({ system, ...formData });
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} className="character-form">
-      <input
-        name="name"
-        placeholder="Name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-        className="character-form__input"
-      />
-      <input
-        name="level"
-        placeholder="Level"
-        type="number"
-        value={formData.level}
-        onChange={handleChange}
-        required
-        className="character-form__input"
-      />
-      <input
-        name="class"
-        placeholder="Class"
-        value={formData.class}
-        onChange={handleChange}
-        required
-        className="character-form__input"
-      />
-      <input
-        name="race"
-        placeholder="Race"
-        value={formData.race}
-        onChange={handleChange}
-        required
-        className="character-form__input"
-      />
-      <input
-        name="image"
-        placeholder="Image URL"
-        value={formData.image}
-        onChange={handleChange}
-        required
-        className="character-form__input"
-      />
-      {["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"].map((stat) => (
-        <div key={stat} className="character-form__stat">
+      <div className="character-form__field">
+        <label>System</label>
+        <select value={system} onChange={(e) => setSystem(e.target.value)}>
+          <option value="dnd">DnD</option>
+          <option value="call_of_cthulhu">Call of Cthulhu</option>
+          <option value="vasen">Vasen</option>
+        </select>
+        {errors.system && <span className="error">{errors.system}</span>}
+      </div>
+      {fields.map((field) => (
+        <div key={field.name} className="character-form__field">
+          <label>{field.label}</label>
           <input
-            name={stat}
-            placeholder={stat.charAt(0).toUpperCase() + stat.slice(1)}
-            type="number"
-            value={formData[stat]}
+            name={field.name}
+            type={field.type}
+            value={formData[field.name] || ""}
             onChange={handleChange}
+            required={field.required}
             className="character-form__input"
           />
-          <button
-            type="button"
-            //onClick={() => rollStat(stat)}
-            className="character-form__button character-form__button--roll"
-          >
-            Roll
-          </button>
+          {errors[field.name] && <span className="error">{errors[field.name]}</span>}
         </div>
       ))}
       <div className="character-form__actions">

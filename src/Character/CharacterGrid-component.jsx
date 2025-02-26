@@ -1,8 +1,7 @@
-// CharacterGrid.js
 import React, { useState, useEffect } from "react";
 import { CharacterCard } from "./CharacterCard-component";
 import { CharacterForm } from "./CharacterForm-component";
-import "./Character-styles.css";
+import "./CharacterGrid-styles.css";
 
 export const CharacterGrid = () => {
   const [characters, setCharacters] = useState([]);
@@ -24,7 +23,13 @@ export const CharacterGrid = () => {
       body: JSON.stringify(newCharacter),
     })
       .then((res) => res.json())
-      .then((data) => setCharacters((prev) => [...prev, data]))
+      .then((data) => {
+        if (data.character) {
+          setCharacters((prev) => [...prev, data.character]);
+        } else {
+          console.error("Error creating character:", data.error);
+        }
+      })
       .catch((err) => console.error(err));
 
     setIsFormVisible(false);

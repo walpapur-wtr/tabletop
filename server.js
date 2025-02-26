@@ -51,30 +51,35 @@ app.get("/api/characters/:name", (req, res) => {
 
 // Створити нового персонажа
 app.post("/api/characters", (req, res) => {
-  const { name, level, class: charClass, race, image, strength, dexterity, constitution, intelligence, wisdom, charisma } = req.body;
+  const { system, ...characterData } = req.body;
 
-  if (!name || !level || !charClass || !race || !image ||
-      strength === undefined || dexterity === undefined || constitution === undefined ||
-      intelligence === undefined || wisdom === undefined || charisma === undefined) {
-    return res.status(400).json({ error: "Неправильний формат даних." });
+  if (!system) {
+    return res.status(400).json({ error: "Необхідно вказати систему." });
+  }
+
+  const configFilePath = path.join(__dirname, "configs", `${system}.json`);
+  console.log(`Loading config file from: ${configFilePath}`);
+
+  if (!fs.existsSync(configFilePath)) {
+    return res.status(400).json({ error: "Невідома система." });
+  }
+
+  const config = JSON.parse(fs.readFileSync(configFilePath, "utf-8"));
+  const requiredFields = config.fields.filter(field => field.required).map(field => field.name);
+
+  for (const field of requiredFields) {
+    if (characterData[field] === undefined) {
+      return res.status(400).json({ error: `Поле ${field} є обов'язковим.` });
+    }
   }
 
   const newCharacter = {
     id: Date.now().toString(),
-    name,
-    level,
-    class: charClass,
-    race,
-    image,
-    strength,
-    dexterity,
-    constitution,
-    intelligence,
-    wisdom,
-    charisma
+    system,
+    ...characterData
   };
 
-  const characterFilePath = path.join(charactersDir, `${name}.json`);
+  const characterFilePath = path.join(charactersDir, `${newCharacter.name}.json`);
 
   fs.writeFile(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8", (err) => {
     if (err) {
