@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/Home-page.jsx";
 import CharacterSheet from "./Character/CharacterSheet-component.jsx";
-import AuthPage from "./pages/AuthPage/LoginSignup-page.jsx";
+import AuthPage from "./Login/LoginSignup-page.jsx";
 import App from './App';
 import "./index.css";
 
