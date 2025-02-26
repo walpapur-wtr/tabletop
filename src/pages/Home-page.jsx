@@ -1,5 +1,6 @@
 //Home-page.jsx
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import DiceRollerComponent from "../DiceRoller/DiceRoller-component.jsx";
 import HeaderComponent from "../components/Header-component";
 import FooterComponent from "../components/Footer-component.jsx";
@@ -17,7 +18,7 @@ const HomePage = () => {
     <div className="home-page">
       <HeaderComponent />
       <CharacterGrid />
-
+      <Link to="/auth">Go to Auth Page</Link>
       {/* Mobile Dice Roller Icon */}
       <div className="mobile-dice-roller-icon" onClick={toggleDiceRoller}>
         🎲
