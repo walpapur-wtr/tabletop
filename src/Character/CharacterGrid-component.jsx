@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { CharacterCard } from "./CharacterCard-component";
 import { CharacterForm } from "./CharacterForm-component";
-import "./Character-styles.css";
+import "./CharacterGrid-styles.css";
 
 export const CharacterGrid = () => {
   const [characters, setCharacters] = useState([]);

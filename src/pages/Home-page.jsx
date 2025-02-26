@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import DiceRollerComponent from "../DiceRoller/DiceRoller-component.jsx";
 import HeaderComponent from "../components/Header-component";
-import FooterComponent from "../components/Footer.jsx";
+import FooterComponent from "../components/Footer-component.jsx";
 import { CharacterGrid } from "../Character/CharacterGrid-component.jsx";
 import "../styles/Home-styles.css";
 

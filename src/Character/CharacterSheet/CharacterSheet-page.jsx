@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import HeaderComponent from "../components/Header-component";
-import FooterComponent from "../components/Footer";
-import CharacterSheet from "./CharacterSheet";
-import "./Character-styles.css";
+import HeaderComponent from "../../components/Header-component.jsx";
+import FooterComponent from "../../components/Footer-component.jsx";
+import CharacterSheet from "./CharacterSheet-component.jsx";
+import "./CharacterSheet-styles.css";
 
 const CharacterPage = () => {
   const { characterName } = useParams();
@@ -11,6 +11,7 @@ const CharacterPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  //отримання даних про персонажа з сервера
   useEffect(() => {
     fetch(`/api/characters/${characterName}`)
       .then((res) => {

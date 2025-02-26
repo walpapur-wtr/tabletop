@@ -1,0 +1,46 @@
+.character-sheet {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.character-sheet__image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.character-sheet__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.character-sheet__stats h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.character-sheet__stats p {
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .character-sheet {
+        padding: 0.5rem;
+    }
+
+    .character-sheet__stats h2 {
+        font-size: 1.25rem;
+    }
+
+    .character-sheet__stats p {
+        font-size: 0.875rem;
+    }
+}

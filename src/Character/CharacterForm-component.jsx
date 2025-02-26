@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 //import { DiceRoller } from "rpg-dice-roller";
-import "./Character-styles.css";
+import "./CharacterGrid-styles.css";
 
 export const CharacterForm = ({ onSubmit, onCancel }) => {
   //const roller = new DiceRoller();
