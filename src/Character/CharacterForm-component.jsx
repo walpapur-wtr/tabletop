@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { rollDice } from "../DiceRoller/Roll-script";
 import "./CharacterGrid-styles.css";
 
 export const CharacterForm = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({});
-  const [fields, setFields] = useState([]);
+  const [sections, setSections] = useState([]);
   const [system, setSystem] = useState("dnd");
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     // Завантаження конфігураційного файлу для вибраної системи
-    console.log(`Loading config for system: ${system}`);
-    import(`../configs/${system}.json`)
+    import(`../../configs/${system}.json`)
       .then((config) => {
-        console.log("Config loaded:", config);
-        setFields(config.fields);
+        setSections(config.sections);
         setErrors({});
       })
       .catch((err) => {
@@ -33,12 +32,24 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
     }));
   };
 
+  const handleRoll = async (field) => {
+    const rollResult = await rollDice("4d6");
+    const sortedRolls = rollResult.rolls.map(r => r.value).sort((a, b) => a - b);
+    const total = sortedRolls.slice(1).reduce((sum, roll) => sum + roll, 0);
+    setFormData((prev) => ({
+      ...prev,
+      [field]: total,
+    }));
+  };
+
   const validateForm = () => {
     const newErrors = {};
-    fields.forEach((field) => {
-      if (field.required && !formData[field.name]) {
-        newErrors[field.name] = `Поле ${field.label} є обов'язковим.`;
-      }
+    sections.forEach((section) => {
+      section.fields.forEach((field) => {
+        if (field.required && !formData[field.name]) {
+          newErrors[field.name] = `Поле ${field.label} є обов'язковим.`;
+        }
+      });
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -62,18 +73,28 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
         </select>
         {errors.system && <span className="error">{errors.system}</span>}
       </div>
-      {fields.map((field) => (
-        <div key={field.name} className="character-form__field">
-          <label>{field.label}</label>
-          <input
-            name={field.name}
-            type={field.type}
-            value={formData[field.name] || ""}
-            onChange={handleChange}
-            required={field.required}
-            className="character-form__input"
-          />
-          {errors[field.name] && <span className="error">{errors[field.name]}</span>}
+      {sections.map((section) => (
+        <div key={section.name} className="character-form__section">
+          <h3>{section.name}</h3>
+          {section.fields.map((field) => (
+            <div key={field.name} className="character-form__field">
+              <label>{field.label}</label>
+              <input
+                name={field.name}
+                type={field.type}
+                value={formData[field.name] || ""}
+                onChange={handleChange}
+                required={field.required}
+                className="character-form__input"
+              />
+              {field.rollable && (
+                <button type="button" onClick={() => handleRoll(field.name)}>
+                  Roll
+                </button>
+              )}
+              {errors[field.name] && <span className="error">{errors[field.name]}</span>}
+            </div>
+          ))}
         </div>
       ))}
       <div className="character-form__actions">

@@ -27,14 +27,6 @@ export const CharacterCard = ({ character, onAddClick }) => {
           <p className="character-card__details">Level: {character.level}</p>
           <p className="character-card__details">Class: {character.class}</p>
           <p className="character-card__details">Race: {character.race}</p>
-          <div className="character-card__stats">
-            <p>STR: {character.strength}</p>
-            <p>DEX: {character.dexterity}</p>
-            <p>CON: {character.constitution}</p>
-            <p>INT: {character.intelligence}</p>
-            <p>WIS: {character.wisdom}</p>
-            <p>CHA: {character.charisma}</p>
-          </div>
         </div>
       </div>
     </Link>

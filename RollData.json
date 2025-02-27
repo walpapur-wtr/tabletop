@@ -1,3 +1,116 @@
 [
-
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 3
+      },
+      {
+        "value": 1
+      },
+      {
+        "value": 5
+      },
+      {
+        "value": 6
+      }
+    ],
+    "total": 15,
+    "date": "2025-02-27T13:27:33.965Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 5
+      },
+      {
+        "value": 4
+      },
+      {
+        "value": 6
+      },
+      {
+        "value": 5
+      }
+    ],
+    "total": 20,
+    "date": "2025-02-27T13:27:35.284Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 6
+      },
+      {
+        "value": 5
+      },
+      {
+        "value": 6
+      },
+      {
+        "value": 1
+      }
+    ],
+    "total": 18,
+    "date": "2025-02-27T13:27:39.523Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 5
+      },
+      {
+        "value": 5
+      },
+      {
+        "value": 6
+      },
+      {
+        "value": 4
+      }
+    ],
+    "total": 20,
+    "date": "2025-02-27T13:27:40.939Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 2
+      },
+      {
+        "value": 5
+      },
+      {
+        "value": 6
+      },
+      {
+        "value": 4
+      }
+    ],
+    "total": 17,
+    "date": "2025-02-27T13:27:41.546Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 4
+      },
+      {
+        "value": 4
+      },
+      {
+        "value": 6
+      },
+      {
+        "value": 1
+      }
+    ],
+    "total": 15,
+    "date": "2025-02-27T13:27:42.002Z"
+  }
 ]

@@ -1,14 +1,45 @@
 {
-  "fields": [
-    { "name": "name", "label": "Name", "type": "text", "required": true },
-    { "name": "level", "label": "Level", "type": "number", "required": true },
-    { "name": "class", "label": "Class", "type": "text", "required": true },
-    { "name": "race", "label": "Race", "type": "text", "required": true },
-    { "name": "strength", "label": "Strength", "type": "number", "required": true },
-    { "name": "dexterity", "label": "Dexterity", "type": "number", "required": true },
-    { "name": "constitution", "label": "Constitution", "type": "number", "required": true },
-    { "name": "intelligence", "label": "Intelligence", "type": "number", "required": true },
-    { "name": "wisdom", "label": "Wisdom", "type": "number", "required": true },
-    { "name": "charisma", "label": "Charisma", "type": "number", "required": true }
+  "sections": [
+    {
+      "name": "General",
+      "fields": [
+        { "name": "name", "label": "Name", "type": "text", "required": true, "default": "NPC" },
+        { "name": "race", "label": "Race", "type": "text", "required": true },
+        { "name": "classes", "label": "Classes", "type": "array", "required": false },
+        { "name": "background.name", "label": "Background Name", "type": "text", "required": true },
+        { "name": "background.description", "label": "Background Description", "type": "textarea", "required": false }
+      ]
+    },
+    {
+      "name": "Attributes",
+      "fields": [
+        { "name": "strength", "label": "Strength", "type": "number", "required": true, "rollable": true },
+        { "name": "dexterity", "label": "Dexterity", "type": "number", "required": true, "rollable": true },
+        { "name": "constitution", "label": "Constitution", "type": "number", "required": true, "rollable": true },
+        { "name": "intelligence", "label": "Intelligence", "type": "number", "required": true, "rollable": true },
+        { "name": "wisdom", "label": "Wisdom", "type": "number", "required": true, "rollable": true },
+        { "name": "charisma", "label": "Charisma", "type": "number", "required": true, "rollable": true }
+      ]
+    },
+    {
+      "name": "Health and Defense",
+      "fields": [
+        { "name": "ac", "label": "Armor Class", "type": "number", "required": true },
+        { "name": "hp", "label": "Hit Points", "type": "number", "required": true },
+        { "name": "speed", "label": "Speed", "type": "number", "required": true }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "fields": [
+        { "name": "weapons", "label": "Weapons", "type": "array", "required": false },
+        { "name": "equipment", "label": "Equipment", "type": "array", "required": false },
+        { "name": "treasure.pp", "label": "Platinum", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure.ep", "label": "Electrum", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure.gp", "label": "Gold", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure.sp", "label": "Silver", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure.cp", "label": "Copper", "type": "number", "required": false, "default": 0 }
+      ]
+    }
   ]
 }

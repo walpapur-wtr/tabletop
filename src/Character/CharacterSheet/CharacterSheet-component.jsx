@@ -1,25 +1,22 @@
 import React from "react";
+import "./CharacterSheet-styles.css";
 
 const CharacterSheet = ({ character }) => {
-  if (!character) return <p>Персонаж не знайдений.</p>;
+  const renderSection = (section) => (
+    <div key={section.name} className="character-sheet__section">
+      <h3>{section.name}</h3>
+      {section.fields.map((field) => (
+        <p key={field.name}>
+          <strong>{field.label}:</strong> {character[field.name]}
+        </p>
+      ))}
+    </div>
+  );
 
   return (
     <div className="character-sheet">
-      <h1>{character.name}</h1>
-      <p>Level: {character.level}</p>
-      <p>Class: {character.class}</p>
-      <p>Race: {character.race}</p>
-      <img src={character.image} alt={character.name} className="character-sheet__image" />
-      
-      <div className="character-sheet__stats">
-        <h2>Характеристики</h2>
-        <p>Сила (STR): {character.strength}</p>
-        <p>Спритність (DEX): {character.dexterity}</p>
-        <p>Тілобудова (CON): {character.constitution}</p>
-        <p>Інтелект (INT): {character.intelligence}</p>
-        <p>Мудрість (WIS): {character.wisdom}</p>
-        <p>Харизма (CHA): {character.charisma}</p>
-      </div>
+      <h2>{character.name}</h2>
+      {character.sections.map(renderSection)}
     </div>
   );
 };
