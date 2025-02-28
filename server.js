@@ -42,7 +42,7 @@ app.get("/api/characters/:name", (req, res) => {
   const characterFile = path.join(charactersDir, `${characterName}.json`);
 
   if (!fs.existsSync(characterFile)) {
-    return res.status(404).json({ error: "Персонаж не знайдений." });
+    return res.status(404).json({ error: "Персонажа не знайдено." });
   }
 
   const characterData = JSON.parse(fs.readFileSync(characterFile, "utf-8"));
@@ -51,7 +51,7 @@ app.get("/api/characters/:name", (req, res) => {
 
 // Створити нового персонажа
 app.post("/api/characters", (req, res) => {
-  const { system, ...characterData } = req.body;
+  const { system, sections } = req.body;
 
   if (!system) {
     return res.status(400).json({ error: "Необхідно вказати систему." });
@@ -61,14 +61,22 @@ app.post("/api/characters", (req, res) => {
   console.log(`Loading config file from: ${configFilePath}`);
 
   if (!fs.existsSync(configFilePath)) {
+    console.error(`Config file not found: ${configFilePath}`);
     return res.status(400).json({ error: "Невідома система." });
   }
 
   const config = JSON.parse(fs.readFileSync(configFilePath, "utf-8"));
-  const requiredFields = config.fields.filter(field => field.required).map(field => field.name);
+
+  if (!config.sections) {
+    console.error(`Invalid config file: ${configFilePath}`);
+    return res.status(400).json({ error: "Невірний формат конфігураційного файлу." });
+  }
+
+  const requiredFields = config.sections.flatMap(section => section.fields.filter(field => field.required).map(field => `${section.name}.${field.name}`));
 
   for (const field of requiredFields) {
-    if (characterData[field] === undefined) {
+    const [sectionName, fieldName] = field.split('.');
+    if (!sections[sectionName] || sections[sectionName][fieldName] === undefined) {
       return res.status(400).json({ error: `Поле ${field} є обов'язковим.` });
     }
   }
@@ -76,10 +84,10 @@ app.post("/api/characters", (req, res) => {
   const newCharacter = {
     id: Date.now().toString(),
     system,
-    ...characterData
+    sections
   };
 
-  const characterFilePath = path.join(charactersDir, `${newCharacter.name}.json`);
+  const characterFilePath = path.join(charactersDir, `${sections["Основна інформація"].name}.json`);
 
   fs.writeFile(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8", (err) => {
     if (err) {

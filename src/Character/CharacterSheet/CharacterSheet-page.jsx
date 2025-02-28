@@ -6,14 +6,14 @@ import CharacterSheet from "./CharacterSheet-component.jsx";
 import "./CharacterSheet-styles.css";
 
 const CharacterPage = () => {
-  const { characterName } = useParams();
+  const { name } = useParams();
   const [character, setCharacter] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   //отримання даних про персонажа з сервера
   useEffect(() => {
-    fetch(`/api/characters/${characterName}`)
+    fetch(`/api/characters/${name}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Персонаж не знайдений");
@@ -28,7 +28,7 @@ const CharacterPage = () => {
         setError(err.message);
         setLoading(false);
       });
-  }, [characterName]);
+  }, [name]);
 
   return (
     <div className="character-page">

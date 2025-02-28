@@ -24,21 +24,27 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
       });
   }, [system]);
 
-  const handleChange = (e) => {
+  const handleChange = (e, sectionName) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [sectionName]: {
+        ...prev[sectionName],
+        [name]: value,
+      },
     }));
   };
 
-  const handleRoll = async (field) => {
+  const handleRoll = async (field, sectionName) => {
     const rollResult = await rollDice("4d6");
     const sortedRolls = rollResult.rolls.map(r => r.value).sort((a, b) => a - b);
     const total = sortedRolls.slice(1).reduce((sum, roll) => sum + roll, 0);
     setFormData((prev) => ({
       ...prev,
-      [field]: total,
+      [sectionName]: {
+        ...prev[sectionName],
+        [field]: total,
+      },
     }));
   };
 
@@ -46,8 +52,8 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
     const newErrors = {};
     sections.forEach((section) => {
       section.fields.forEach((field) => {
-        if (field.required && !formData[field.name]) {
-          newErrors[field.name] = `Поле ${field.label} є обов'язковим.`;
+        if (field.required && (!formData[section.name] || !formData[section.name][field.name])) {
+          newErrors[`${section.name}.${field.name}`] = `Поле ${field.label} є обов'язковим.`;
         }
       });
     });
@@ -58,7 +64,7 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit({ system, ...formData });
+      onSubmit({ system, sections: formData });
     }
   };
 
@@ -82,17 +88,17 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
               <input
                 name={field.name}
                 type={field.type}
-                value={formData[field.name] || ""}
-                onChange={handleChange}
+                value={formData[section.name]?.[field.name] || ""}
+                onChange={(e) => handleChange(e, section.name)}
                 required={field.required}
                 className="character-form__input"
               />
               {field.rollable && (
-                <button type="button" onClick={() => handleRoll(field.name)}>
+                <button type="button" onClick={() => handleRoll(field.name, section.name)}>
                   Roll
                 </button>
               )}
-              {errors[field.name] && <span className="error">{errors[field.name]}</span>}
+              {errors[`${section.name}.${field.name}`] && <span className="error">{errors[`${section.name}.${field.name}`]}</span>}
             </div>
           ))}
         </div>

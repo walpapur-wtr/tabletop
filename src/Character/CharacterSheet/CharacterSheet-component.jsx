@@ -13,10 +13,16 @@ const CharacterSheet = ({ character }) => {
     </div>
   );
 
+  console.log("Character sections:", character.sections);
+
   return (
     <div className="character-sheet">
       <h2>{character.name}</h2>
-      {character.sections.map(renderSection)}
+      {character.sections && character.sections.length > 0 ? (
+        character.sections.map(renderSection)
+      ) : (
+        <p>No sections available</p>
+      )}
     </div>
   );
 };
