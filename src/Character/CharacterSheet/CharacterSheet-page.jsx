@@ -21,6 +21,7 @@ const CharacterPage = () => {
         return res.json();
       })
       .then((data) => {
+        console.log("Character loaded:", data);
         setCharacter(data);
         setLoading(false);
       })

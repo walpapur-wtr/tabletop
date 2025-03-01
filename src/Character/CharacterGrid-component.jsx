@@ -11,7 +11,10 @@ export const CharacterGrid = () => {
     // Fetch characters from server
     fetch("/api/characters")
       .then((res) => res.json())
-      .then((data) => setCharacters(data))
+      .then((data) => {
+        console.log("Characters loaded:", data);
+        setCharacters(data);
+      })
       .catch((err) => console.error(err));
   }, []);
 
@@ -52,3 +55,5 @@ export const CharacterGrid = () => {
     </div>
   );
 };
+
+export default CharacterGrid;

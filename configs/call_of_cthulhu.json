@@ -1,6 +1,11 @@
 {
-  "fields": [
-    { "name": "name", "label": "Name", "type": "text", "required": true },
-    { "name": "level", "label": "Level", "type": "number", "required": true }
+  "sections": [
+    {
+      "name": "General",
+      "fields": [
+        { "name": "name", "label": "Name", "type": "text", "required": true },
+        { "name": "level", "label": "Level", "type": "number", "required": true }
+      ]
+    }
   ]
 }

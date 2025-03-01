@@ -1,8 +1,13 @@
 {
-  "fields": [
-    { "name": "name", "label": "Name", "type": "text", "required": true },
-    { "name": "level", "label": "Level", "type": "number", "required": true },
-    { "name": "class", "label": "Class", "type": "text", "required": true },
-    { "name": "race", "label": "Race", "type": "text", "required": true }
+  "sections": [
+    {
+      "name": "General",
+      "fields": [
+        { "name": "name", "label": "Name", "type": "text", "required": true },
+        { "name": "level", "label": "Level", "type": "number", "required": true },
+        { "name": "class", "label": "Class", "type": "text", "required": true },
+        { "name": "race", "label": "Race", "type": "text", "required": true }
+      ]
+    }
   ]
 }

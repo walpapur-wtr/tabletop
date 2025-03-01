@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import DiceRollerComponent from "../DiceRoller/DiceRoller-component.jsx";
 import HeaderComponent from "../components/Header-component";
 import FooterComponent from "../components/Footer-component.jsx";
-import { CharacterGrid } from "../Character/CharacterGrid-component.jsx";
+import CharacterGrid from "../Character/CharacterGrid-component.jsx";
 import "../styles/Home-styles.css";
 
 const HomePage = () => {

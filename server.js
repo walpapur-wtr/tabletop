@@ -87,7 +87,7 @@ app.post("/api/characters", (req, res) => {
     sections
   };
 
-  const characterFilePath = path.join(charactersDir, `${sections["Основна інформація"].name}.json`);
+  const characterFilePath = path.join(charactersDir, `${sections["General"].name}.json`);
 
   fs.writeFile(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8", (err) => {
     if (err) {

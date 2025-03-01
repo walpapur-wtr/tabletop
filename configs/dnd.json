@@ -6,8 +6,8 @@
         { "name": "name", "label": "Name", "type": "text", "required": true, "default": "NPC" },
         { "name": "race", "label": "Race", "type": "text", "required": true },
         { "name": "classes", "label": "Classes", "type": "array", "required": false },
-        { "name": "background.name", "label": "Background Name", "type": "text", "required": true },
-        { "name": "background.description", "label": "Background Description", "type": "textarea", "required": false }
+        { "name": "background-name", "label": "Background Name", "type": "text", "required": true },
+        { "name": "background-description", "label": "Background Description", "type": "textarea", "required": false }
       ]
     },
     {
@@ -34,11 +34,11 @@
       "fields": [
         { "name": "weapons", "label": "Weapons", "type": "array", "required": false },
         { "name": "equipment", "label": "Equipment", "type": "array", "required": false },
-        { "name": "treasure.pp", "label": "Platinum", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure.ep", "label": "Electrum", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure.gp", "label": "Gold", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure.sp", "label": "Silver", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure.cp", "label": "Copper", "type": "number", "required": false, "default": 0 }
+        { "name": "treasure-pp", "label": "Platinum", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-ep", "label": "Electrum", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-gp", "label": "Gold", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-sp", "label": "Silver", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-cp", "label": "Copper", "type": "number", "required": false, "default": 0 }
       ]
     }
   ]

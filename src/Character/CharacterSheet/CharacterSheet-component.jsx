@@ -2,12 +2,12 @@ import React from "react";
 import "./CharacterSheet-styles.css";
 
 const CharacterSheet = ({ character }) => {
-  const renderSection = (section) => (
-    <div key={section.name} className="character-sheet__section">
-      <h3>{section.name}</h3>
-      {section.fields.map((field) => (
-        <p key={field.name}>
-          <strong>{field.label}:</strong> {character[field.name]}
+  const renderSection = (sectionName, sectionData) => (
+    <div key={sectionName} className="character-sheet__section">
+      <h3>{sectionName}</h3>
+      {Object.entries(sectionData).map(([fieldName, fieldValue]) => (
+        <p key={fieldName}>
+          <strong>{fieldName}:</strong> {fieldValue}
         </p>
       ))}
     </div>
@@ -18,8 +18,10 @@ const CharacterSheet = ({ character }) => {
   return (
     <div className="character-sheet">
       <h2>{character.name}</h2>
-      {character.sections && character.sections.length > 0 ? (
-        character.sections.map(renderSection)
+      {character.sections && Object.keys(character.sections).length > 0 ? (
+        Object.entries(character.sections).map(([sectionName, sectionData]) =>
+          renderSection(sectionName, sectionData)
+        )
       ) : (
         <p>No sections available</p>
       )}
