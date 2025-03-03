@@ -1,0 +1,35 @@
+{
+  "id": "1740991143629",
+  "system": "dnd",
+  "sections": {
+    "General": {
+      "name": "Тест-1",
+      "race": "Тест",
+      "classes": "Тест",
+      "background-name": "Тест",
+      "background-description": "Тест чомусь не синхро"
+    },
+    "Attributes": {
+      "strength": 16,
+      "dexterity": 6,
+      "constitution": 9,
+      "intelligence": 12,
+      "wisdom": 14,
+      "charisma": 11
+    },
+    "Health and Defense": {
+      "ac": "16",
+      "hp": "57",
+      "speed": "29"
+    },
+    "Inventory": {
+      "weapons": "Тест",
+      "equipment": "Тест",
+      "treasure-pp": "1",
+      "treasure-ep": "34",
+      "treasure-gp": "34",
+      "treasure-sp": "345",
+      "treasure-cp": "346346"
+    }
+  }
+}

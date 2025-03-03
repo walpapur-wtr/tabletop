@@ -1,0 +1,34 @@
+{
+  "id": "1741012075892",
+  "system": "dnd",
+  "sections": {
+    "General": {
+      "name": "Тест-4",
+      "race": "Тест",
+      "classes": "Тест",
+      "background-name": "Тест успішний",
+      "description": "Тестую поетапне заповнення та редагування",
+      "level": "4"
+    },
+    "Attributes": {
+      "strength": 11,
+      "dexterity": 14,
+      "constitution": 11,
+      "intelligence": 11,
+      "wisdom": 9,
+      "charisma": 11
+    },
+    "Health and Defense": {
+      "ac": "5",
+      "hp": "78",
+      "speed": "45"
+    },
+    "Inventory": {
+      "weapons": "Тест",
+      "equipment": "Тест",
+      "treasure-pp": "3",
+      "treasure-ep": "53",
+      "treasure-gp": "56"
+    }
+  }
+}

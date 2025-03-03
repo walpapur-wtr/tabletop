@@ -2,43 +2,48 @@
   "sections": [
     {
       "name": "General",
+      "step": 1,
       "fields": [
-        { "name": "name", "label": "Name", "type": "text", "required": true, "default": "NPC" },
-        { "name": "race", "label": "Race", "type": "text", "required": true },
-        { "name": "classes", "label": "Classes", "type": "array", "required": false },
-        { "name": "background-name", "label": "Background Name", "type": "text", "required": true },
-        { "name": "background-description", "label": "Background Description", "type": "textarea", "required": false }
+        { "name": "name", "label": "Ім'я", "type": "text", "required": true, "default": "NPC" },
+        { "name": "race", "label": "Раса", "type": "text", "required": true },
+        { "name": "classes", "label": "Класи", "type": "array", "required": false },
+        { "name": "background-name", "label": "Передісторія", "type": "text", "required": false },
+        { "name": "description", "label": "Опис", "type": "textarea", "required": false },
+        { "name": "level", "label": "Рівень", "type": "text", "required": true }
       ]
     },
     {
       "name": "Attributes",
+      "step": 2,
       "fields": [
-        { "name": "strength", "label": "Strength", "type": "number", "required": true, "rollable": true },
-        { "name": "dexterity", "label": "Dexterity", "type": "number", "required": true, "rollable": true },
-        { "name": "constitution", "label": "Constitution", "type": "number", "required": true, "rollable": true },
-        { "name": "intelligence", "label": "Intelligence", "type": "number", "required": true, "rollable": true },
-        { "name": "wisdom", "label": "Wisdom", "type": "number", "required": true, "rollable": true },
-        { "name": "charisma", "label": "Charisma", "type": "number", "required": true, "rollable": true }
+        { "name": "strength", "label": "Сила", "type": "number", "required": true, "rollable": true },
+        { "name": "dexterity", "label": "Спритність", "type": "number", "required": true, "rollable": true },
+        { "name": "constitution", "label": "Тілобудова", "type": "number", "required": true, "rollable": true },
+        { "name": "intelligence", "label": "Інтелект", "type": "number", "required": true, "rollable": true },
+        { "name": "wisdom", "label": "Мудрість", "type": "number", "required": true, "rollable": true },
+        { "name": "charisma", "label": "Харизма", "type": "number", "required": true, "rollable": true }
       ]
     },
     {
       "name": "Health and Defense",
+      "step": 3,
       "fields": [
-        { "name": "ac", "label": "Armor Class", "type": "number", "required": true },
-        { "name": "hp", "label": "Hit Points", "type": "number", "required": true },
-        { "name": "speed", "label": "Speed", "type": "number", "required": true }
+        { "name": "ac", "label": "Захист", "type": "number", "required": true },
+        { "name": "hp", "label": "Здоров'я", "type": "number", "required": true },
+        { "name": "speed", "label": "Пересування", "type": "number", "required": true }
       ]
     },
     {
       "name": "Inventory",
+      "step": 4,
       "fields": [
-        { "name": "weapons", "label": "Weapons", "type": "array", "required": false },
-        { "name": "equipment", "label": "Equipment", "type": "array", "required": false },
-        { "name": "treasure-pp", "label": "Platinum", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-ep", "label": "Electrum", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-gp", "label": "Gold", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-sp", "label": "Silver", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-cp", "label": "Copper", "type": "number", "required": false, "default": 0 }
+        { "name": "weapons", "label": "Зброя", "type": "array", "required": false },
+        { "name": "equipment", "label": "Спорядження", "type": "array", "required": false },
+        { "name": "treasure-pp", "label": "Платинові монети", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-ep", "label": "Електричні", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-gp", "label": "Золоті", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-sp", "label": "Сріьні", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-cp", "label": "Мідні", "type": "number", "required": false, "default": 0 }
       ]
     }
   ]

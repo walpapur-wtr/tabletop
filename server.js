@@ -72,7 +72,9 @@ app.post("/api/characters", (req, res) => {
     return res.status(400).json({ error: "Невірний формат конфігураційного файлу." });
   }
 
-  const requiredFields = config.sections.flatMap(section => section.fields.filter(field => field.required).map(field => `${section.name}.${field.name}`));
+  // Validate required fields only for the first step
+  const firstStepSections = config.sections.filter(section => section.step === 1);
+  const requiredFields = firstStepSections.flatMap(section => section.fields.filter(field => field.required).map(field => `${section.name}.${field.name}`));
 
   for (const field of requiredFields) {
     const [sectionName, fieldName] = field.split('.');
@@ -95,6 +97,38 @@ app.post("/api/characters", (req, res) => {
     }
     res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
   });
+});
+
+// Оновити персонажа
+app.put("/api/characters/:name", (req, res) => {
+  const characterName = decodeURIComponent(req.params.name);
+  const characterFile = path.join(charactersDir, `${characterName}.json`);
+
+  if (!fs.existsSync(characterFile)) {
+    return res.status(404).json({ error: "Персонажа не знайдено." });
+  }
+
+  const { sections } = req.body;
+  const characterData = JSON.parse(fs.readFileSync(characterFile, "utf-8"));
+
+  // Оновлюємо дані персонажа
+  characterData.sections = { ...characterData.sections, ...sections };
+
+  fs.writeFile(characterFile, JSON.stringify(characterData, null, 2), "utf-8", (err) => {
+    if (err) {
+      return res.status(500).json({ error: "Помилка запису у файл." });
+    }
+    res.status(200).json({ message: "Персонаж оновлено.", character: characterData });
+  });
+});
+
+// Serve configuration files
+app.get("/configs/:system.json", (req, res) => {
+  const configFilePath = path.join(__dirname, "configs", `${req.params.system}.json`);
+  if (!fs.existsSync(configFilePath)) {
+    return res.status(404).send("Configuration file not found");
+  }
+  res.sendFile(configFilePath);
 });
 
 // Обробка всіх інших маршрутів (для React Router)

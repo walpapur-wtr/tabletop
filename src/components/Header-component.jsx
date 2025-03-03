@@ -14,7 +14,7 @@ const Header = () => {
     <header className="header">
       <nav className="nav">
         <div className="nav-left">
-          <a href="#home" className="nav-link">
+          <a href="http://127.1.3.202:3000" className="nav-link">
             <FaHome className="icon" />
             <span className="nav-text">Home</span>
           </a>

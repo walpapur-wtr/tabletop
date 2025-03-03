@@ -7,6 +7,7 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
   const [sections, setSections] = useState([]);
   const [system, setSystem] = useState("dnd");
   const [errors, setErrors] = useState({});
+  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
     // Завантаження конфігураційного файлу для вибраної системи
@@ -51,11 +52,13 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
   const validateForm = () => {
     const newErrors = {};
     sections.forEach((section) => {
-      section.fields.forEach((field) => {
-        if (field.required && (!formData[section.name] || !formData[section.name][field.name])) {
-          newErrors[`${section.name}.${field.name}`] = `Поле ${field.label} є обов'язковим.`;
-        }
-      });
+      if (section.step === currentStep) {
+        section.fields.forEach((field) => {
+          if (field.required && (!formData[section.name] || !formData[section.name][field.name])) {
+            newErrors[`${section.name}.${field.name}`] = `Поле ${field.label} є обов'язковим.`;
+          }
+        });
+      }
     });
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -64,7 +67,14 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSubmit({ system, sections: formData });
+      if (currentStep === 1) {
+        // Save the character after the first step
+        onSubmit({ system, sections: formData });
+        setCurrentStep(currentStep + 1);
+      } else {
+        // Update the character for subsequent steps
+        onSubmit({ system, sections: formData });
+      }
     }
   };
 
@@ -79,7 +89,7 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
         </select>
         {errors.system && <span className="error">{errors.system}</span>}
       </div>
-      {sections.map((section) => (
+      {sections.filter(section => section.step === currentStep).map((section) => (
         <div key={section.name} className="character-form__section">
           <h3>{section.name}</h3>
           {section.fields.map((field) => (
@@ -105,7 +115,7 @@ export const CharacterForm = ({ onSubmit, onCancel }) => {
       ))}
       <div className="character-form__actions">
         <button type="submit" className="character-form__button character-form__button--submit">
-          Create
+          {currentStep === 1 ? "Next" : "Save"}
         </button>
         <button
           type="button"
