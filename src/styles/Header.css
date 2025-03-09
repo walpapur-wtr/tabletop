@@ -71,12 +71,14 @@
 
 .dropdown {
     position: absolute;
-    top: 100%;
-    left: 0;
+    top: 150%;
+    right: 0;
     background-color: #444;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     z-index: 1000;
+    max-height: 80vh; /* Ensure dropdown doesn't exceed viewport height */
+    overflow-y: auto; /* Add scroll inside dropdown if needed */
 }
 
 .dropdown-link {

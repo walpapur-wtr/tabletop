@@ -1,6 +1,7 @@
 // Навігаційна панель
 import React, { useState } from "react";
 import { FaHome, FaUser } from "react-icons/fa"; // Імпорт іконок
+import { Link } from "react-router-dom";
 import "../styles/Header.css";
 
 const Header = () => {
@@ -14,10 +15,10 @@ const Header = () => {
     <header className="header">
       <nav className="nav">
         <div className="nav-left">
-          <a href="http://127.1.3.202:3000" className="nav-link">
+          <Link to="/" className="nav-link">
             <FaHome className="icon" />
             <span className="nav-text">Home</span>
-          </a>
+          </Link>
           <a href="#profile" className="nav-link">
             <FaUser className="icon" />
             <span className="nav-text">User Profile</span>

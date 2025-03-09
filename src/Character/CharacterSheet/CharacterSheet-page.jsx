@@ -4,6 +4,7 @@ import HeaderComponent from "../../components/Header-component.jsx";
 import FooterComponent from "../../components/Footer-component.jsx";
 import CharacterSheet from "./CharacterSheet-component.jsx";
 import { CharacterSheetEdit } from "../CharacterSheetEdit-component";
+import DiceRollerComponent from "../../DiceRoller/DiceRoller-component.jsx";
 import "./CharacterSheet-styles.css";
 
 const CharacterPage = () => {
@@ -14,6 +15,11 @@ const CharacterPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDiceRollerVisible, setDiceRollerVisible] = useState(false);
+  
+  const toggleDiceRoller = () => {
+    setDiceRollerVisible(!isDiceRollerVisible);
+  }
 
   //отримання даних про персонажа з сервера
   useEffect(() => {
@@ -83,6 +89,18 @@ const CharacterPage = () => {
           )
         )}
       </div>
+      <div className="mobile-dice-roller-icon" onClick={toggleDiceRoller}>
+        🎲
+      </div>
+
+      {isDiceRollerVisible && (
+        <div className="mobile-dice-roller-popup">
+          <button className="close-popup" onClick={toggleDiceRoller}>
+            ✖
+          </button>
+          <DiceRollerComponent />
+        </div>
+      )}
       <FooterComponent />
     </div>
   );
