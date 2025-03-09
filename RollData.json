@@ -1,800 +1,330 @@
 [
   {
-    "formula": "4d6",
+    "formula": "1d20",
     "rolls": [
       {
-        "value": 2
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 5
-      }
-    ],
-    "total": 12,
-    "date": "2025-03-01T17:45:29.696Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      }
-    ],
-    "total": 21,
-    "date": "2025-03-01T17:45:30.453Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 5
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 4
-      }
-    ],
-    "total": 17,
-    "date": "2025-03-01T17:45:31.012Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 5
-      },
-      {
-        "value": 3
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 5
-      }
-    ],
-    "total": 15,
-    "date": "2025-03-01T17:45:31.596Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 2
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 2
-      }
-    ],
-    "total": 11,
-    "date": "2025-03-01T17:45:33.016Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 1
-      }
-    ],
-    "total": 18,
-    "date": "2025-03-01T17:45:33.627Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 4
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 2
-      }
-    ],
-    "total": 15,
-    "date": "2025-03-01T17:50:14.226Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 3
-      }
-    ],
-    "total": 13,
-    "date": "2025-03-01T17:50:14.868Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 1
-      }
-    ],
-    "total": 12,
-    "date": "2025-03-01T17:50:15.474Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 2
-      }
-    ],
-    "total": 16,
-    "date": "2025-03-01T17:50:16.074Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 6
-      }
-    ],
-    "total": 19,
-    "date": "2025-03-01T17:50:16.641Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 4
-      }
-    ],
-    "total": 13,
-    "date": "2025-03-01T17:50:17.247Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 1
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 6
-      }
-    ],
-    "total": 15,
-    "date": "2025-03-01T17:53:10.496Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 3
-      },
-      {
-        "value": 6
-      }
-    ],
-    "total": 21,
-    "date": "2025-03-01T17:53:11.788Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 3
-      }
-    ],
-    "total": 13,
-    "date": "2025-03-01T17:53:12.260Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 2
-      }
-    ],
-    "total": 16,
-    "date": "2025-03-01T17:53:12.868Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 5
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      }
-    ],
-    "total": 19,
-    "date": "2025-03-01T17:53:13.467Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 1
-      }
-    ],
-    "total": 9,
-    "date": "2025-03-01T17:53:14.067Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 3
-      },
-      {
-        "value": 3
-      }
-    ],
-    "total": 11,
-    "date": "2025-03-01T17:55:44.248Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 1
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 6
-      }
-    ],
-    "total": 10,
-    "date": "2025-03-01T17:55:44.901Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 2
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 4
-      }
-    ],
-    "total": 16,
-    "date": "2025-03-01T17:55:45.645Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 6
-      }
-    ],
-    "total": 22,
-    "date": "2025-03-01T17:55:46.382Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 3
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 2
-      }
-    ],
-    "total": 13,
-    "date": "2025-03-01T17:55:47.345Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 1
-      }
-    ],
-    "total": 6,
-    "date": "2025-03-01T17:55:47.945Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 4
-      }
-    ],
-    "total": 12,
-    "date": "2025-03-01T17:57:45.385Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 2
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 3
-      }
-    ],
-    "total": 15,
-    "date": "2025-03-01T17:57:45.927Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 5
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 2
-      }
-    ],
-    "total": 16,
-    "date": "2025-03-01T17:57:46.558Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 6
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 3
-      },
-      {
-        "value": 5
+        "value": 20
       }
     ],
     "total": 20,
-    "date": "2025-03-01T17:57:47.280Z"
+    "date": "2025-03-09T15:27:09.151Z"
   },
   {
-    "formula": "4d6",
+    "formula": "1d20",
     "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 5
-      },
       {
         "value": 5
       }
     ],
-    "total": 14,
-    "date": "2025-03-01T17:57:50.119Z"
+    "total": 5,
+    "date": "2025-03-09T15:28:07.768Z"
   },
   {
-    "formula": "4d6",
+    "formula": "3d100",
     "rolls": [
       {
-        "value": 4
+        "value": 70
+      },
+      {
+        "value": 43
+      },
+      {
+        "value": 78
+      }
+    ],
+    "total": 191,
+    "date": "2025-03-09T15:28:14.020Z"
+  },
+  {
+    "formula": "1d20",
+    "rolls": [
+      {
+        "value": 16
+      }
+    ],
+    "total": 16,
+    "date": "2025-03-09T15:33:09.248Z"
+  },
+  {
+    "formula": "1d4 + 1d6 + 1d8 + 1d10 + 1d12 + 1d20 + 1d100",
+    "rolls": [
+      {
+        "value": 3
       },
       {
         "value": 2
       },
       {
-        "value": 4
+        "value": 2
       },
       {
-        "value": 3
-      }
-    ],
-    "total": 13,
-    "date": "2025-03-01T17:57:50.906Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
+        "value": 1
+      },
       {
-        "value": 3
+        "value": 8
       },
       {
         "value": 6
       },
       {
-        "value": 5
+        "value": 7
+      }
+    ],
+    "total": 29,
+    "date": "2025-03-09T15:33:13.907Z"
+  },
+  {
+    "formula": "1d4",
+    "rolls": [
+      {
+        "value": 1
+      }
+    ],
+    "total": 1,
+    "date": "2025-03-09T15:33:17.450Z"
+  },
+  {
+    "formula": "1d6",
+    "rolls": [
+      {
+        "value": 3
+      }
+    ],
+    "total": 3,
+    "date": "2025-03-09T15:33:20.186Z"
+  },
+  {
+    "formula": "adv(1d20)",
+    "rolls": [
+      {
+        "value": 13
       },
       {
-        "value": 5
+        "value": 11
+      }
+    ],
+    "total": 13,
+    "date": "2025-03-09T15:35:03.924Z"
+  },
+  {
+    "formula": "disadv(1d20)",
+    "rolls": [
+      {
+        "value": 12
+      },
+      {
+        "value": 19
       }
     ],
     "total": 19,
-    "date": "2025-03-03T08:38:35.870Z"
+    "date": "2025-03-09T15:35:06.313Z"
   },
   {
-    "formula": "4d6",
+    "formula": "1d6",
     "rolls": [
       {
-        "value": 3
-      },
-      {
         "value": 1
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 2
       }
     ],
-    "total": 7,
-    "date": "2025-03-03T08:38:37.531Z"
+    "total": 1,
+    "date": "2025-03-09T15:36:07.972Z"
   },
   {
-    "formula": "4d6",
+    "formula": "1d20",
     "rolls": [
       {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 2
+        "value": 10,
+        "dice": "d20"
       }
     ],
     "total": 10,
-    "date": "2025-03-03T08:38:38.034Z"
+    "date": "2025-03-09T15:40:53.379Z"
   },
   {
-    "formula": "4d6",
+    "formula": "1d4 + 1d20 + 1d10",
     "rolls": [
       {
-        "value": 4
+        "value": 1,
+        "dice": "d4"
       },
       {
-        "value": 3
+        "value": 5,
+        "dice": "d20"
       },
       {
-        "value": 5
-      },
-      {
-        "value": 2
+        "value": 8,
+        "dice": "d10"
       }
     ],
     "total": 14,
-    "date": "2025-03-03T08:38:38.674Z"
+    "date": "2025-03-09T15:40:56.850Z"
   },
   {
-    "formula": "4d6",
+    "formula": "1d6",
     "rolls": [
       {
-        "value": 6
+        "value": 4,
+        "dice": "d6"
+      }
+    ],
+    "total": 4,
+    "date": "2025-03-09T15:42:00.171Z"
+  },
+  {
+    "formula": "1d4 + 1d6 + 1d8 + 1d10 + 1d12 + 1d20 + 1d100",
+    "rolls": [
+      {
+        "value": 3,
+        "dice": "d4"
       },
       {
-        "value": 6
+        "value": 2,
+        "dice": "d6"
       },
       {
-        "value": 2
+        "value": 4,
+        "dice": "d8"
       },
       {
-        "value": 1
+        "value": 3,
+        "dice": "d10"
+      },
+      {
+        "value": 6,
+        "dice": "d12"
+      },
+      {
+        "value": 18,
+        "dice": "d20"
+      },
+      {
+        "value": 68,
+        "dice": "d100"
+      }
+    ],
+    "total": 104,
+    "date": "2025-03-09T15:42:04.189Z"
+  },
+  {
+    "formula": "1d20 + 3",
+    "rolls": [
+      {
+        "value": 2,
+        "dice": "d20"
+      },
+      {
+        "value": 3,
+        "isModifier": true
+      }
+    ],
+    "total": 5,
+    "date": "2025-03-09T15:42:10.990Z"
+  },
+  {
+    "formula": "1d4 + 1d6 + 1d8 + 1d10 + 1d12 + 1d20 + 1d100 + 3",
+    "rolls": [
+      {
+        "value": 1,
+        "dice": "d4"
+      },
+      {
+        "value": 1,
+        "dice": "d6"
+      },
+      {
+        "value": 5,
+        "dice": "d8"
+      },
+      {
+        "value": 10,
+        "dice": "d10"
+      },
+      {
+        "value": 1,
+        "dice": "d12"
+      },
+      {
+        "value": 18,
+        "dice": "d20"
+      },
+      {
+        "value": 30,
+        "dice": "d100"
+      },
+      {
+        "value": 3,
+        "isModifier": true
+      }
+    ],
+    "total": 69,
+    "date": "2025-03-09T15:42:19.307Z"
+  },
+  {
+    "formula": "1d150 + 3",
+    "rolls": [
+      {
+        "value": 108,
+        "dice": "d150"
+      },
+      {
+        "value": 3,
+        "isModifier": true
+      }
+    ],
+    "total": 111,
+    "date": "2025-03-09T15:42:26.481Z"
+  },
+  {
+    "formula": "1d14 + 3",
+    "rolls": [
+      {
+        "value": 12,
+        "dice": "d14"
+      },
+      {
+        "value": 3,
+        "isModifier": true
       }
     ],
     "total": 15,
-    "date": "2025-03-03T08:38:39.306Z"
+    "date": "2025-03-09T15:42:32.412Z"
   },
   {
-    "formula": "4d6",
+    "formula": "adv(1d20) + 3",
     "rolls": [
       {
-        "value": 3
+        "value": 1,
+        "dice": "d20"
       },
       {
-        "value": 4
+        "value": 10,
+        "dice": "d20"
       },
       {
-        "value": 4
-      },
-      {
-        "value": 1
-      }
-    ],
-    "total": 12,
-    "date": "2025-03-03T08:38:39.922Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 6
-      },
-      {
-        "value": 2
-      },
-      {
-        "value": 1
-      }
-    ],
-    "total": 12,
-    "date": "2025-03-03T15:42:32.715Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 5
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 5
-      }
-    ],
-    "total": 15,
-    "date": "2025-03-03T15:42:33.257Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 2
-      },
-      {
-        "value": 4
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 2
+        "value": 3,
+        "isModifier": true
       }
     ],
     "total": 13,
-    "date": "2025-03-03T15:42:33.728Z"
+    "date": "2025-03-09T15:42:38.098Z"
   },
   {
-    "formula": "4d6",
+    "formula": "disadv(1d20) + 3",
     "rolls": [
       {
-        "value": 2
+        "value": 6,
+        "dice": "d20"
       },
       {
-        "value": 5
+        "value": 13,
+        "dice": "d20"
       },
       {
-        "value": 2
-      },
-      {
-        "value": 4
+        "value": 3,
+        "isModifier": true
       }
     ],
-    "total": 13,
-    "date": "2025-03-03T15:42:34.177Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 3
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 3
-      }
-    ],
-    "total": 10,
-    "date": "2025-03-03T15:42:34.653Z"
-  },
-  {
-    "formula": "4d6",
-    "rolls": [
-      {
-        "value": 3
-      },
-      {
-        "value": 5
-      },
-      {
-        "value": 1
-      },
-      {
-        "value": 3
-      }
-    ],
-    "total": 12,
-    "date": "2025-03-03T15:42:35.047Z"
+    "total": 16,
+    "date": "2025-03-09T15:42:42.021Z"
   }
 ]

@@ -3,7 +3,7 @@
     margin: 0 auto;
     padding: 1rem;
     box-sizing: border-box;
-    color: orange;
+    color: #ffa500;
     width: 100%;
 }
 
@@ -133,6 +133,20 @@
     cursor: pointer;
 }
 
+.dice-roller__last-roll-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.dice-roller__roll-item {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
 .roll-history-popup .close-popup {
     position: absolute;
     top: -30px;
@@ -142,4 +156,23 @@
     font-size: 20px;
     color: white;
     cursor: pointer;
+}
+
+.dice-icon-with-result {
+    position: relative;
+    display: inline-block;
+}
+
+.dice-result {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px black;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.1rem 0.3rem;
+    border-radius: 0.2rem;
+    pointer-events: none;
 }

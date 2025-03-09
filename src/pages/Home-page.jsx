@@ -18,12 +18,10 @@ const HomePage = () => {
     <div className="home-page">
       <HeaderComponent />
       <CharacterGrid />
-      <Link to="/auth">Go to Auth Page</Link>
       {/* Mobile Dice Roller Icon */}
       <div className="mobile-dice-roller-icon" onClick={toggleDiceRoller}>
         🎲
       </div>
-
       {isDiceRollerVisible && (
         <div className="mobile-dice-roller-popup">
           <button className="close-popup" onClick={toggleDiceRoller}>

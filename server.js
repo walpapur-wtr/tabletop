@@ -153,14 +153,14 @@ app.post("/rolls", (req, res) => {
 
   // Читаємо поточні дані з файлу
   fs.readFile(dataFilePath, "utf-8", (err, data) => {
-    if (err) {
+    if (err && err.code !== 'ENOENT') {
       return res.status(500).json({ error: "Помилка читання файлу." });
     }
 
     let rollData = [];
 
     try {
-      rollData = JSON.parse(data);
+      rollData = data ? JSON.parse(data) : [];
     } catch (parseError) {
       return res.status(500).json({ error: "Помилка парсингу файлу." });
     }

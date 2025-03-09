@@ -1,4 +1,4 @@
-const serverUrl = "http://127.1.3.202:3000/rolls";
+const serverUrl = "http://127.1.3.170:3000/rolls";
 
 const rollDice = async (formula) => {
   try {
@@ -108,7 +108,7 @@ const rollSingleDice = (formula) => {
   const total = rolls.reduce((sum, roll) => sum + roll, 0);
 
   return {
-    rolls: rolls.map(value => ({ value })),
+    rolls: rolls.map(value => ({ value, dice: `d${sides}` })),
     total,
   };
 };

@@ -1,8 +1,20 @@
 import React, { useState } from "react";
-import { FaDiceD20 } from "react-icons/fa";
 import RollHistoryComponent from "./RollStats/RollHistory-component";
 import "./DiceRoller-styles.css";
 import { rollDice } from "./Roll-script";
+import { ReactComponent as DiceBlack16D4 } from "./assets/dice-b16-d4.svg";
+import { ReactComponent as DiceOrange32D4 } from "./assets/dice-o32-d4.svg";
+import { ReactComponent as DiceBlack16D6 } from "./assets/dice-b16-d6.svg";
+import { ReactComponent as DiceOrange32D6 } from "./assets/dice-o32-d6.svg";
+import { ReactComponent as DiceBlack16D8 } from "./assets/dice-b16-d8.svg";
+import { ReactComponent as DiceOrange32D8 } from "./assets/dice-o32-d8.svg";
+import { ReactComponent as DiceBlack16D10 } from "./assets/dice-b16-d10.svg";
+import { ReactComponent as DiceOrange32D10 } from "./assets/dice-o32-d10.svg";
+import { ReactComponent as DiceBlack16D12 } from "./assets/dice-b16-d12.svg";
+import { ReactComponent as DiceOrange32D12 } from "./assets/dice-o32-d12.svg";
+import { ReactComponent as DiceBlack16D20 } from "./assets/dice-b16-d20.svg";
+import { ReactComponent as DiceOrange32D20 } from "./assets/dice-o32-d20.svg";
+
 
 const DiceRollerComponent = () => {
   const [modifier, setModifier] = useState(0);
@@ -73,19 +85,76 @@ const DiceRollerComponent = () => {
     setModifier(newModifier);
   };
 
+  const getDiceIconWithResult = (dice, result) => {
+  if (!dice || result === undefined) {
+    return null;
+  }
+
+  const sides = parseInt(dice.replace("d", ""), 10);
+  const icon = sides <= 4 ? <DiceOrange32D4 /> :
+               sides <= 6 ? <DiceOrange32D6 /> :
+               sides <= 8 ? <DiceOrange32D8 /> :
+               sides <= 10 ? <DiceOrange32D10 /> :
+               sides <= 12 ? <DiceOrange32D12 /> :
+               sides <= 20 ? <DiceOrange32D20 /> :
+               <>
+                 <DiceOrange32D10 /> <DiceOrange32D10 />
+               </>;
+
+  return (
+    <div className="dice-icon-with-result">
+      {icon}
+      <span className="dice-result">{result}</span>
+    </div>
+  );
+};
+
   return (
     <div className="dice-roller">
 
       <div className="dice-roller__dice-buttons">
-        {["d4", "d6", "d8", "d10", "d12", "d20", "d100"].map((dice) => (
-          <button
-            className="dice-roller__dice-button"
-            key={dice}
-            onClick={() => addDiceToFormula(dice)}
-          >
-            <FaDiceD20 /> {dice}
-          </button>
-        ))}
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d4")}
+        >
+          <DiceBlack16D4 /> d4
+        </button>
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d6")}
+        >
+          <DiceBlack16D6 /> d6
+        </button>
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d8")}
+        >
+          <DiceBlack16D8 /> d8
+        </button>
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d10")}
+        >
+          <DiceBlack16D10 /> d10
+        </button>
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d12")}
+        >
+          <DiceBlack16D12 /> d12
+        </button>
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d20")}
+        >
+          <DiceBlack16D20 /> d20
+        </button>
+        <button
+          className="dice-roller__dice-button"
+          onClick={() => addDiceToFormula("d100")}
+        >
+          <DiceBlack16D10 /> <DiceBlack16D10 /> d100
+        </button>
       </div>
 
       <div className="dice-roller__modifier">
@@ -145,29 +214,43 @@ const DiceRollerComponent = () => {
       </div>
 
       {lastRoll && (
-        <div className="dice-roller__last-roll">
-          <p>Результат останнього кидка:</p>
-          <div className="dice-roller__last-roll-section">
-            <strong className="dice-roller__last-roll-result">
-              {lastRoll.total}
-            </strong>
-            <div className="dice-roller__last-roll-buttons">
-              <button
-                className="dice-roller__reroll-button"
-                onClick={repeatLastRoll}
-              >
-                Повторити кидок
-              </button>
-              <button
-                className="dice-roller__history-button"
-                onClick={() => setHistoryVisible(true)}
-              >
-                Історія кидків
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="dice-roller__last-roll">
+    <p>Результат останнього кидка:</p>
+    <div className="dice-roller__last-roll-details">
+      {lastRoll.rolls.map((roll, index) => (
+        <span key={index} className="dice-roller__roll-item">
+          {roll.isModifier ? (
+            `m: ${roll.value}`
+          ) : (
+            <>
+              {getDiceIconWithResult(roll.dice, roll.value)}
+            </>
+          )}
+          {index < lastRoll.rolls.length - 1 && ", "}
+        </span>
+      ))}
+    </div>
+    <div className="dice-roller__last-roll-section">
+      <strong className="dice-roller__last-roll-result">
+        {lastRoll.total}
+      </strong>
+      <div className="dice-roller__last-roll-buttons">
+        <button
+          className="dice-roller__reroll-button"
+          onClick={repeatLastRoll}
+        >
+          Повторити кидок
+        </button>
+        <button
+          className="dice-roller__history-button"
+          onClick={() => setHistoryVisible(true)}
+        >
+          Історія кидків
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       {isHistoryVisible && (
         <div className="roll-history-popup">
@@ -178,6 +261,7 @@ const DiceRollerComponent = () => {
             history={history}
             onDelete={deleteRoll}
             onRepeat={repeatLastRoll}
+            onClose={() => setHistoryVisible(false)}
           />
         </div>
       )}
