@@ -3,6 +3,7 @@ const serverUrl = "http://127.1.3.170:3000/rolls";
 const rollDice = async (formula) => {
   try {
     const rollData = parseFormula(formula);
+    console.log(`Скрипт отримав формулу: ${formula}`);
     await sendRollDataToServer(rollData);
     return rollData;
   } catch (error) {
@@ -12,16 +13,19 @@ const rollDice = async (formula) => {
 };
 
 const parseFormula = (formula) => {
-  const advMatch = formula.match(/adv\(([^)]+)\)/);
   const disadvMatch = formula.match(/disadv\(([^)]+)\)/);
+  const advMatch = formula.match(/adv\(([^)]+)\)/);
 
-  if (advMatch) {
-    validateAdvDisadvFormula(advMatch[1]);
-    return handleAdvDisadvRoll(advMatch[1], "adv", formula);
-  } else if (disadvMatch) {
+  if (disadvMatch) {
+    console.log(`Формула визначена як перешкода: ${disadvMatch[1]}`);
     validateAdvDisadvFormula(disadvMatch[1]);
     return handleAdvDisadvRoll(disadvMatch[1], "disadv", formula);
+  } else if (advMatch) {
+    console.log(`Формула визначена як перевага: ${advMatch[1]}`);
+    validateAdvDisadvFormula(advMatch[1]);
+    return handleAdvDisadvRoll(advMatch[1], "adv", formula);
   } else {
+    console.log(`Формула визначена як стандартна: ${formula}`);
     return handleStandardRoll(formula);
   }
 };
@@ -81,6 +85,8 @@ const handleAdvantageRoll = (formula) => {
   const roll2 = rollSingleDice(formula);
   const total = Math.max(roll1.total, roll2.total);
 
+  console.log(`Функція переваги: roll1 = ${roll1.total}, roll2 = ${roll2.total}, total = ${total}`);
+
   return {
     formula: `adv(${formula})`,
     rolls: [...roll1.rolls, ...roll2.rolls],
@@ -93,6 +99,8 @@ const handleDisadvantageRoll = (formula) => {
   const roll1 = rollSingleDice(formula);
   const roll2 = rollSingleDice(formula);
   const total = Math.min(roll1.total, roll2.total);
+
+  console.log(`Функція перешкоди: roll1 = ${roll1.total}, roll2 = ${roll2.total}, total = ${total}`);
 
   return {
     formula: `disadv(${formula})`,

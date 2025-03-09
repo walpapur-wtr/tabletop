@@ -173,7 +173,8 @@ app.post("/rolls", (req, res) => {
       if (writeErr) {
         return res.status(500).json({ error: "Помилка запису у файл." });
       }
-
+      
+      console.log("Сервер отримав дані кидка:", rollData);
       res.status(200).json({ message: "Дані успішно збережено.", newRoll });
     });
   });

@@ -43,6 +43,8 @@ const DiceRollerComponent = () => {
     let formula = customFormula;
     if (modifier) formula += ` + ${modifier}`;
 
+    console.log(`Компонент передає формулу: ${formula}`);
+
     try {
       const rollData = await rollDice(formula);
       if (rollData) {
@@ -56,16 +58,19 @@ const DiceRollerComponent = () => {
   };
 
   const handleAdvantageRoll = () => {
-    let formula = customFormula || "1d20";
+  let formula = customFormula || "1d20";
     formula = formula.replace(/adv\(([^)]+)\)|disadv\(([^)]+)\)/, "$1$2");
+    console.log(`Компонент передає формулу з перевагою: adv(${formula})`);
     setCustomFormula(`adv(${formula})`);
-  };
+    
+};
 
-  const handleDisadvantageRoll = () => {
-    let formula = customFormula || "1d20";
-    formula = formula.replace(/adv\(([^)]+)\)|disadv\(([^)]+)\)/, "$1$2");
-    setCustomFormula(`disadv(${formula})`);
-  };
+const handleDisadvantageRoll = () => {
+  let formula = customFormula || "1d20";
+  formula = formula.replace(/adv\(([^)]+)\)|disadv\(([^)]+)\)/, "$1$2");
+  console.log(`Компонент передає формулу з перешкодою: disadv(${formula})`);
+  setCustomFormula(`disadv(${formula})`);
+};
 
   const repeatLastRoll = async () => {
     if (!lastRoll) return;
