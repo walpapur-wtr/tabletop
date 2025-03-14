@@ -2,6 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
+const mysql = require('mysql2');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,6 +14,71 @@ app.use(bodyParser.json());
 
 const charactersDir = path.join(__dirname, "Characters");
 const dataFilePath = path.join(__dirname, "RollData.json");
+
+// MySQL Database connection
+const db = mysql.createConnection({
+    host: 'vz536877.mysql.tools', // replace with your database host
+    user: 'vz536877_tabletoplogin', // replace with your database username
+    password: 'HcE856-a;f', // replace with your database password
+    database: 'vz536877_tabletoplogin', // replace with your database name
+});
+
+db.connect((err) => {
+    if (err) {
+        console.error('Failed to connect to database:', err);
+        process.exit(1); // Завершити програму, якщо підключення не вдалося
+    } else {
+        console.log('Connected to MySQL database');
+    }
+});
+
+
+// Registration endpoint
+app.post('/api/register', (req, res) => {
+    const { username, email, password } = req.body;
+    const sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+
+    db.query(sql, [username, email, password], (err, results) => {
+        if (err) {
+            console.error('Помилка SQL-запиту:', err); // Додане логування помилки
+            return res.status(500).json({ message: 'Помилка реєстрації', error: err });
+        }
+        console.log('Результати SQL-запиту:', results); // Логування результату для перевірки
+        res.status(201).json({ message: 'Користувач успішно зареєстрований' });
+    });
+});
+
+// Login endpoint
+app.post('/api/login', (req, res) => {
+    const { email, username, password } = req.body;
+
+    // Якщо передано email, виконуємо пошук за email
+    let sql;
+    let params;
+
+    if (email) {
+        sql = 'SELECT * FROM users WHERE email = ? AND password = ?';
+        params = [email, password];
+    } else if (username) {
+        sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
+        params = [username, password];
+    } else {
+        return res.status(400).json({ message: 'Email або Username обов\'язкові для входу' });
+    }
+
+    db.query(sql, params, (err, results) => {
+        if (err) {
+            console.error('Помилка SQL-запиту:', err);  // Логування помилки
+            return res.status(500).json({ message: 'Login failed' });
+        }
+
+        if (results.length > 0) {
+            res.json({ message: 'Login successful' });
+        } else {
+            res.status(401).json({ message: 'Invalid email/username or password' });
+        }
+    });
+});
 
 // Перевіряємо, чи існує директорія для персонажів, і створюємо її, якщо її немає
 if (!fs.existsSync(charactersDir)) {
