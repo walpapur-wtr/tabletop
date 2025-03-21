@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import HeaderComponent from "../../components/Header-component.jsx";
 import FooterComponent from "../../components/Footer-component.jsx";
 import CharacterSheet from "./CharacterSheet-component.jsx";
-import { CharacterSheetEdit } from "../CharacterSheetEdit-component";
+import { CharacterSheetEdit } from "./CharacterSheetEdit-component";
 import DiceRollerComponent from "../../DiceRoller/DiceRoller-component.jsx";
+import DiceRollerButton from "../../components/DiceRollerButton.jsx";
 import "./CharacterSheet-styles.css";
 
 const CharacterPage = () => {
@@ -71,9 +72,9 @@ const CharacterPage = () => {
   };
 
   return (
-    <div className="character-page">
+    <div className="character-page" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <HeaderComponent />
-      <div className="character-page__content">
+      <div className="character-page__content" style={{ flex: 1 }}>
         {loading && <p>Завантаження...</p>}
         {error && <p className="error">{error}</p>}
         {character && config && (
@@ -89,6 +90,7 @@ const CharacterPage = () => {
           )
         )}
       </div>
+      <DiceRollerButton />
       <div className="mobile-dice-roller-icon" onClick={toggleDiceRoller}>
         🎲
       </div>

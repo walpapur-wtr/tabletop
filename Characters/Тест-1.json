@@ -7,11 +7,13 @@
       "race": "Тест",
       "classes": "Тест",
       "background-name": "Тест",
-      "background-description": "Тест чомусь не синхро"
+      "background-description": "Тест чомусь не синхро",
+      "level": "5",
+      "description": "Перша бета версія сайту"
     },
     "Attributes": {
       "strength": 16,
-      "dexterity": 6,
+      "dexterity": 13,
       "constitution": 9,
       "intelligence": 12,
       "wisdom": 14,

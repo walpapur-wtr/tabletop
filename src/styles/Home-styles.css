@@ -3,7 +3,7 @@
 .home-page {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh; /* Забезпечує повну висоту сторінки */
     padding: 0;
     box-sizing: border-box;
 }
@@ -86,4 +86,8 @@
     font-size: 20px;
     color: white;
     cursor: pointer;
+}
+
+.footer {
+    margin-top: auto; /* Додає футер внизу сторінки */
 }

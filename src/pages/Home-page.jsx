@@ -5,6 +5,7 @@ import HeaderComponent from "../components/Header-component";
 import FooterComponent from "../components/Footer-component.jsx";
 import CharacterGrid from "../Character/CharacterGrid-component.jsx";
 import "../styles/Home-styles.css";
+import DiceRollerButton from "../components/DiceRollerButton.jsx";
 
 const HomePage = () => {
   const [isDiceRollerVisible, setDiceRollerVisible] = useState(false);
@@ -16,19 +17,10 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <HeaderComponent />
-      <CharacterGrid />
-      {/* Mobile Dice Roller Icon */}
-      <div className="mobile-dice-roller-icon" onClick={toggleDiceRoller}>
-        🎲
+      <div style={{ flex: 1 }}>
+        <CharacterGrid />
       </div>
-      {isDiceRollerVisible && (
-        <div className="mobile-dice-roller-popup">
-          <button className="close-popup" onClick={toggleDiceRoller}>
-            ✖
-          </button>
-          <DiceRollerComponent />
-        </div>
-      )}
+      <DiceRollerButton />
       <FooterComponent />
     </div>
   );

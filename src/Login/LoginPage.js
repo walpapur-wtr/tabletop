@@ -3,6 +3,7 @@ import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 import HeaderComponent from '../components/Header-component';
 import FooterComponent from '../components/Footer-component';
+import DiceRollerButton from "../components/DiceRollerButton.jsx";
 import "./Login.css";
 
 const LoginPage = () => {
@@ -14,13 +15,14 @@ const LoginPage = () => {
 
   return (
     <div className="login-container">
-      <HeaderComponent />
+      <HeaderComponent className="header" />
       {isRegistering ? (
         <RegisterForm toggleForm={toggleForm} />
       ) : (
         <LoginForm toggleForm={toggleForm} />
       )}
-       <FooterComponent />
+      <DiceRollerButton />
+      <FooterComponent className="footer" />
     </div>
   );
 };

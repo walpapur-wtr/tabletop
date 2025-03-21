@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { CharacterCard } from "./CharacterCard-component";
-import { CharacterForm } from "./CharacterForm-component";
+import { useNavigate } from "react-router-dom";
 import "./CharacterGrid-styles.css";
 
 export const CharacterGrid = () => {
   const [characters, setCharacters] = useState([]);
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isSystemModalVisible, setIsSystemModalVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch characters from server
@@ -18,24 +19,9 @@ export const CharacterGrid = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleAddCharacter = (newCharacter) => {
-    // Send new character to server
-    fetch("/api/characters", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newCharacter),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.character) {
-          setCharacters((prev) => [...prev, data.character]);
-        } else {
-          console.error("Error creating character:", data.error);
-        }
-      })
-      .catch((err) => console.error(err));
-
-    setIsFormVisible(false);
+  const handleSystemSelect = (system) => {
+    setIsSystemModalVisible(false);
+    navigate(`/create-character/${system}`);
   };
 
   return (
@@ -43,13 +29,29 @@ export const CharacterGrid = () => {
       {characters.map((character) => (
         <CharacterCard key={character.id} character={character} />
       ))}
-      <CharacterCard onAddClick={() => setIsFormVisible(true)} />
-      {isFormVisible && (
-        <div className="character-grid__form">
-          <CharacterForm
-            onSubmit={handleAddCharacter}
-            onCancel={() => setIsFormVisible(false)}
-          />
+      <CharacterCard onAddClick={() => setIsSystemModalVisible(true)} />
+      {isSystemModalVisible && (
+        <div className="system-modal">
+          <div className="system-modal__content">
+            <h3>Виберіть систему</h3>
+            <ul className="system-modal__list">
+              {["DnD", "PathFinder", "Call of Cthulhu", "Vaesen", "Custom"].map((system) => (
+                <li
+                  key={system}
+                  className="system-modal__item"
+                  onClick={() => handleSystemSelect(system.toLowerCase())}
+                >
+                  {system}
+                </li>
+              ))}
+            </ul>
+            <button
+              className="system-modal__close"
+              onClick={() => setIsSystemModalVisible(false)}
+            >
+              ✖
+            </button>
+          </div>
         </div>
       )}
     </div>
