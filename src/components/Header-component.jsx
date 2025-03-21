@@ -19,10 +19,11 @@ const Header = () => {
             <FaHome className="icon" />
             <span className="nav-text">Home</span>
           </Link>
-          <a href="#profile" className="nav-link">
+          <Link to="/login" className="nav-link">
             <FaUser className="icon" />
             <span className="nav-text">User Profile</span>
-          </a>
+          </Link>
+            
         </div>
         <div className="nav-right">
           <div className="nav-item">
