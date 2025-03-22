@@ -1,11 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import HomePage from "./pages/Home-page.jsx";
 import CharacterPage from "./Character/CharacterSheet/CharacterSheet-page.jsx";
 import CreateCharacterPage from "./Character/CreateCharacter/CreateCharacter-page.jsx";
 import Login from './Login/LoginPage';
-import "./index.css";
+
+import "./styles/index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

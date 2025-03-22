@@ -118,8 +118,10 @@ app.get("/api/characters/:name", (req, res) => {
 // Створити нового персонажа
 app.post("/api/characters", (req, res) => {
   const { system, sections } = req.body;
+  console.log("Received character creation request:", { system, sections });
 
   if (!system) {
+    console.error("System not specified in request.");
     return res.status(400).json({ error: "Необхідно вказати систему." });
   }
 
@@ -132,6 +134,7 @@ app.post("/api/characters", (req, res) => {
   }
 
   const config = JSON.parse(fs.readFileSync(configFilePath, "utf-8"));
+  console.log("Loaded config file:", config);
 
   if (!config.sections) {
     console.error(`Invalid config file: ${configFilePath}`);
@@ -139,12 +142,15 @@ app.post("/api/characters", (req, res) => {
   }
 
   // Validate required fields only for the first step
-  const firstStepSections = config.sections.filter(section => section.step === 1);
-  const requiredFields = firstStepSections.flatMap(section => section.fields.filter(field => field.required).map(field => `${section.name}.${field.name}`));
+  const firstStepSections = config.sections.filter((section) => section.step === 1);
+  const requiredFields = firstStepSections.flatMap((section) =>
+    section.fields.filter((field) => field.required).map((field) => `${section.name}.${field.name}`)
+  );
 
   for (const field of requiredFields) {
-    const [sectionName, fieldName] = field.split('.');
+    const [sectionName, fieldName] = field.split(".");
     if (!sections[sectionName] || sections[sectionName][fieldName] === undefined) {
+      console.error(`Missing required field: ${field}`);
       return res.status(400).json({ error: `Поле ${field} є обов'язковим.` });
     }
   }
@@ -152,15 +158,18 @@ app.post("/api/characters", (req, res) => {
   const newCharacter = {
     id: Date.now().toString(),
     system,
-    sections
+    sections,
   };
 
   const characterFilePath = path.join(charactersDir, `${sections["General"].name}.json`);
+  console.log("Saving new character to file:", characterFilePath);
 
   fs.writeFile(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8", (err) => {
     if (err) {
+      console.error("Error writing character file:", err);
       return res.status(500).json({ error: "Помилка запису у файл." });
     }
+    console.log("Character saved successfully:", newCharacter);
     res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
   });
 });
@@ -195,6 +204,32 @@ app.get("/configs/:system.json", (req, res) => {
     return res.status(404).send("Configuration file not found");
   }
   res.sendFile(configFilePath);
+});
+
+// Endpoint to fetch configuration files with metadata
+app.get("/api/configs", (req, res) => {
+  const configsDir = path.join(__dirname, "configs");
+
+  fs.readdir(configsDir, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: "Помилка читання директорії конфігурацій." });
+    }
+
+    const configs = files
+      .filter((file) => file.endsWith(".json"))
+      .map((file) => {
+        const filePath = path.join(configsDir, file);
+        const configData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+        return {
+          filename: file,
+          name: configData.name || "Unknown",
+          author: configData.author || "Unknown",
+          basedOn: configData.basedOn || "Custom",
+        };
+      });
+
+    res.status(200).json(configs);
+  });
 });
 
 // Обробка всіх інших маршрутів (для React Router)

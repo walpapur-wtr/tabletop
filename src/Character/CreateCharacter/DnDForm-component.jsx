@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { rollDice } from "../../DiceRoller/Roll-script";
 
-const DnDForm = ({ currentStep, setCurrentStep }) => {
-  const [sections, setSections] = useState([]);
+const DnDForm = ({ sections = [] }) => { // Default to an empty array
+  console.log("DnDForm received sections:", sections);
   const [formData, setFormData] = useState({});
 
-  useEffect(() => {
-    // Завантаження конфігурації
-    fetch("/configs/dnd.json")
-      .then((res) => res.json())
-      .then((data) => setSections(data.sections))
-      .catch((err) => console.error("Error loading config:", err));
-  }, []);
+  if (!Array.isArray(sections) || sections.length === 0) {
+    console.error("Invalid or empty 'sections' prop passed to DnDForm:", sections);
+    return <p>Немає доступних секцій для цієї системи.</p>;
+  }
 
   const handleInputChange = (e, sectionName) => {
     const { name, value } = e.target;
+    console.log(`Input changed in section "${sectionName}", field "${name}":`, value);
     setFormData((prev) => ({
       ...prev,
       [sectionName]: {
@@ -26,9 +24,11 @@ const DnDForm = ({ currentStep, setCurrentStep }) => {
 
   const handleDiceRoll = async (sectionName, fieldName) => {
     try {
+      console.log(`Rolling dice for section "${sectionName}", field "${fieldName}"`);
       const rollResult = await rollDice("4d6");
       const sortedRolls = rollResult.rolls.map((r) => r.value).sort((a, b) => b - a);
       const total = sortedRolls.slice(0, 3).reduce((sum, val) => sum + val, 0);
+      console.log(`Dice roll result for "${fieldName}":`, total);
 
       setFormData((prev) => ({
         ...prev,
@@ -43,7 +43,7 @@ const DnDForm = ({ currentStep, setCurrentStep }) => {
   };
 
   const saveCharacter = () => {
-    // Збереження даних на сервері
+    console.log("Saving character with formData:", formData);
     fetch("/api/characters", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -54,43 +54,40 @@ const DnDForm = ({ currentStep, setCurrentStep }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Character saved:", data);
-        // Перехід на сторінку персонажа
+        console.log("Character saved successfully:", data);
         window.location.href = `/character/${data.character.id}`;
       })
       .catch((err) => console.error("Error saving character:", err));
   };
 
-  if (sections.length === 0) {
-    return <p>Завантаження...</p>;
-  }
-
-  const currentSection = sections[currentStep];
-
   return (
     <div className="character-form">
-      <h2>{currentSection.name}</h2>
-      {currentSection.fields.map((field) => (
-        <div key={field.name} className="character-form__field">
-          <label>{field.label}</label>
-          <div className="character-form__input-group">
-            <input
-              type={field.type}
-              name={field.name}
-              value={formData[currentSection.name]?.[field.name] || ""}
-              onChange={(e) => handleInputChange(e, currentSection.name)}
-              required={field.required}
-            />
-            {field.rollable && (
-        <button
-          type="button"
-          className="dice-roll-button"
-          onClick={() => handleDiceRoll(currentSection.name, field.name)}
-        >
-          🎲
-        </button>
-      )}
-          </div>
+      {sections.map((section) => (
+        <div key={section.name} className="character-form__section">
+          <h2>{section.name}</h2>
+          {section.fields.map((field) => (
+            <div key={field.name} className="character-form__field">
+              <label>{field.label}</label>
+              <div className="character-form__input-group">
+                <input
+                  type={field.type}
+                  name={field.name}
+                  value={formData[section.name]?.[field.name] || ""}
+                  onChange={(e) => handleInputChange(e, section.name)}
+                  required={field.required}
+                />
+                {field.rollable && (
+                  <button
+                    type="button"
+                    className="dice-roll-button"
+                    onClick={() => handleDiceRoll(section.name, field.name)}
+                  >
+                    🎲
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       ))}
       <div className="character-form__navigation">

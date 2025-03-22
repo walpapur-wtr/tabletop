@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DiceRollerComponent from "../DiceRoller/DiceRoller-component.jsx";
-import "../styles/DiceRollerButton.css";
+import "../DiceRoller/DiceRoller-styles.css";
 
 const DiceRollerButton = () => {
   const [isDiceRollerVisible, setDiceRollerVisible] = useState(false);

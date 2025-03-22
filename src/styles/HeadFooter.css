@@ -1,0 +1,136 @@
+/* Base styles */
+.header {
+    background-color: #333;
+    padding: 10px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.header__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__nav-left,
+.header__nav-right {
+    display: flex;
+    align-items: center;
+}
+
+.header__nav-link {
+    display: flex;
+    align-items: center;
+    color: orange;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 18px;
+    transition: color 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.header__nav-link:hover {
+    color: #ffbf47;
+}
+
+.header__icon {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.header__nav-text {
+    display: inline;
+}
+
+.header__nav-item {
+    position: relative;
+}
+
+.header__dropdown-toggle {
+    background: none;
+    border: none;
+    color: orange;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0;
+    margin: 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.header__dropdown-toggle:hover {
+    color: #ffbf47;
+    text-decoration: none;
+}
+
+.header__dropdown {
+    position: absolute;
+    top: 150%;
+    right: 0;
+    background-color: #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    z-index: 1000;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.header__dropdown-link {
+    display: block;
+    color: orange;
+    text-decoration: none;
+    padding: 10px 15px;
+    white-space: nowrap;
+}
+
+.header__dropdown-link:hover {
+    background-color: #555;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+    .header__nav-link {
+        justify-content: center;
+    }
+
+    .header__icon {
+        margin-right: 0;
+        font-size: 24px;
+    }
+
+    .header__nav-text {
+        display: none;
+    }
+
+    .header__dropdown {
+        min-width: 150px;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+    .header__nav-left {
+        flex: 1;
+    }
+
+    .header__nav-right {
+        flex: 0;
+    }
+
+    .header__dropdown {
+        min-width: 200px;
+    }
+}
+
+.footer {
+    margin-top: auto;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}

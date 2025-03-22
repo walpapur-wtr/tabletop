@@ -22,7 +22,7 @@
 
 11. Константи називаємо виключно великими буквами розділяючи слова "_". Наприклад const DICE_AMOUNT = 6;
 
-12. Використовуємо react-router-dom для навігації між сторінками. Наприклад, для переходу на сторінку аутентифікації додаємо маршрут у App.jsx:
+12. Використовуємо react-router-dom для навігації між сторінками. Наприклад, для переходу на сторінку аутентифікації додаємо маршрут у index.js:
 ```jsx
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import HomePage from './pages/Home-page';
