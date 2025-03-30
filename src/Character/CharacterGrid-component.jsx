@@ -20,11 +20,12 @@ export const CharacterGrid = () => {
   }, []);
 
   const handleSystemSelect = (system, basedOn) => {
-    setIsSystemModalVisible(false);
-    const systemName = system.replace(".json", ""); // Remove .json if present
-    const targetComponent = basedOn.toLowerCase() === "dnd" ? "DnDForm" : "CustomForm";
-    navigate(`/create-character/${systemName}?component=${targetComponent}`);
-  };
+  setIsSystemModalVisible(false);
+  const systemName = system.replace(".json", ""); // Remove .json if present
+  const version = systemName; // Використовуємо systemName як версію
+  console.log(`Navigating to create-character/${systemName}/${version}`);
+  navigate(`/create-character/${systemName}/${version}`);
+};
 
   return (
     <div className="character-grid">

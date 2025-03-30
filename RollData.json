@@ -101,5 +101,62 @@
     ],
     "total": 12,
     "date": "2025-03-22T18:27:35.488Z"
+  },
+  {
+    "formula": "1d20",
+    "rolls": [
+      {
+        "value": 2,
+        "dice": "d20"
+      }
+    ],
+    "total": 2,
+    "date": "2025-03-30T18:05:30.896Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 4,
+        "dice": "d6"
+      },
+      {
+        "value": 6,
+        "dice": "d6"
+      },
+      {
+        "value": 6,
+        "dice": "d6"
+      },
+      {
+        "value": 5,
+        "dice": "d6"
+      }
+    ],
+    "total": 21,
+    "date": "2025-03-30T19:22:15.039Z"
+  },
+  {
+    "formula": "4d6",
+    "rolls": [
+      {
+        "value": 6,
+        "dice": "d6"
+      },
+      {
+        "value": 6,
+        "dice": "d6"
+      },
+      {
+        "value": 3,
+        "dice": "d6"
+      },
+      {
+        "value": 1,
+        "dice": "d6"
+      }
+    ],
+    "total": 16,
+    "date": "2025-03-30T19:22:16.695Z"
   }
 ]

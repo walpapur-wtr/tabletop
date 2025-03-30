@@ -1,7 +1,7 @@
 {
-  "name": "Dungeons & Dragons 5-th edition",
-  "author": "Wizards of the Coast",
-  "basedOn": "DnD",
+  "name": "Pathfinder 2-th edition",
+  "author": "Someone",
+  "basedOn": "Pathfinder",
   "sections": [
     {
       "name": "General",

@@ -108,6 +108,7 @@ app.get("/api/characters/:name", (req, res) => {
   const characterFile = path.join(charactersDir, `${characterName}.json`);
 
   if (!fs.existsSync(characterFile)) {
+    console.error(`Character not found: ${characterName}`);
     return res.status(404).json({ error: "Персонажа не знайдено." });
   }
 
@@ -125,34 +126,15 @@ app.post("/api/characters", (req, res) => {
     return res.status(400).json({ error: "Необхідно вказати систему." });
   }
 
-  const configFilePath = path.join(__dirname, "configs", `${system}.json`);
-  console.log(`Loading config file from: ${configFilePath}`);
+  if (!sections || !sections.General || !sections.General.name) {
+    console.error("General section or name is missing.");
+    return res.status(400).json({ error: "Поле General.name є обов'язковим." });
+  }
 
+  const configFilePath = path.join(__dirname, "configs", `${system}.json`);
   if (!fs.existsSync(configFilePath)) {
     console.error(`Config file not found: ${configFilePath}`);
     return res.status(400).json({ error: "Невідома система." });
-  }
-
-  const config = JSON.parse(fs.readFileSync(configFilePath, "utf-8"));
-  console.log("Loaded config file:", config);
-
-  if (!config.sections) {
-    console.error(`Invalid config file: ${configFilePath}`);
-    return res.status(400).json({ error: "Невірний формат конфігураційного файлу." });
-  }
-
-  // Validate required fields only for the first step
-  const firstStepSections = config.sections.filter((section) => section.step === 1);
-  const requiredFields = firstStepSections.flatMap((section) =>
-    section.fields.filter((field) => field.required).map((field) => `${section.name}.${field.name}`)
-  );
-
-  for (const field of requiredFields) {
-    const [sectionName, fieldName] = field.split(".");
-    if (!sections[sectionName] || sections[sectionName][fieldName] === undefined) {
-      console.error(`Missing required field: ${field}`);
-      return res.status(400).json({ error: `Поле ${field} є обов'язковим.` });
-    }
   }
 
   const newCharacter = {
@@ -161,17 +143,10 @@ app.post("/api/characters", (req, res) => {
     sections,
   };
 
-  const characterFilePath = path.join(charactersDir, `${sections["General"].name}.json`);
-  console.log("Saving new character to file:", characterFilePath);
-
-  fs.writeFile(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8", (err) => {
-    if (err) {
-      console.error("Error writing character file:", err);
-      return res.status(500).json({ error: "Помилка запису у файл." });
-    }
-    console.log("Character saved successfully:", newCharacter);
-    res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
-  });
+  const characterFilePath = path.join(charactersDir, `${sections.General.name}.json`);
+  fs.writeFileSync(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8");
+  console.log("Character saved successfully:", newCharacter);
+  res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
 });
 
 // Оновити персонажа
@@ -180,30 +155,49 @@ app.put("/api/characters/:name", (req, res) => {
   const characterFile = path.join(charactersDir, `${characterName}.json`);
 
   if (!fs.existsSync(characterFile)) {
+    console.error(`Character not found: ${characterName}`);
     return res.status(404).json({ error: "Персонажа не знайдено." });
   }
 
   const { sections } = req.body;
   const characterData = JSON.parse(fs.readFileSync(characterFile, "utf-8"));
 
-  // Оновлюємо дані персонажа
   characterData.sections = { ...characterData.sections, ...sections };
 
-  fs.writeFile(characterFile, JSON.stringify(characterData, null, 2), "utf-8", (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Помилка запису у файл." });
-    }
-    res.status(200).json({ message: "Персонаж оновлено.", character: characterData });
-  });
+  fs.writeFileSync(characterFile, JSON.stringify(characterData, null, 2), "utf-8");
+  console.log("Character updated successfully:", characterData);
+  res.status(200).json({ message: "Персонаж оновлено.", character: characterData });
 });
 
 // Serve configuration files
 app.get("/configs/:system.json", (req, res) => {
   const configFilePath = path.join(__dirname, "configs", `${req.params.system}.json`);
+  console.log("Requested config file path:", configFilePath);
+
   if (!fs.existsSync(configFilePath)) {
+    console.error("Configuration file not found:", configFilePath);
     return res.status(404).send("Configuration file not found");
   }
+
+  console.log("Configuration file found:", configFilePath);
   res.sendFile(configFilePath);
+});
+
+app.get("/api/systems/:system/:version", (req, res) => {
+  const { system, version } = req.params;
+  const configPath = path.join(__dirname, "configs", `${version}.json`); // Використовуємо лише версію
+
+  console.log("Requested system:", system);
+  console.log("Requested version:", version);
+  console.log("Config file path:", configPath);
+
+  if (!fs.existsSync(configPath)) {
+    console.error("Configuration file not found:", configPath);
+    return res.status(404).json({ error: "Configuration file not found" });
+  }
+
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  res.json(config);
 });
 
 // Endpoint to fetch configuration files with metadata

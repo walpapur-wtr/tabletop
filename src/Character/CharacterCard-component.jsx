@@ -18,6 +18,7 @@ export const CharacterCard = ({ character, onAddClick }) => {
 
   // Отримуємо ім'я персонажа з секцій, якщо воно там знаходиться
   const characterName = character.name || character.sections?.General?.name;
+  console.log("Generated character link:", `/characters/${characterName}`);
 
   return (
     <Link to={`/characters/${characterName}`} className="character-card-link">

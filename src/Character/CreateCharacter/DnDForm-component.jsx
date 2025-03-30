@@ -1,101 +1,85 @@
 import React, { useState } from "react";
-import { rollDice } from "../../DiceRoller/Roll-script";
+import { useNavigate } from "react-router-dom";
 
-const DnDForm = ({ sections = [] }) => { // Default to an empty array
-  console.log("DnDForm received sections:", sections);
-  const [formData, setFormData] = useState({});
+const DnDForm = ({ config }) => {
+  const [formData, setFormData] = useState({ sections: {} });
+  const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
 
-  if (!Array.isArray(sections) || sections.length === 0) {
-    console.error("Invalid or empty 'sections' prop passed to DnDForm:", sections);
-    return <p>Немає доступних секцій для цієї системи.</p>;
+  if (!config || !config.sections) {
+    return <p>Конфігурація не знайдена або некоректна.</p>;
   }
 
-  const handleInputChange = (e, sectionName) => {
-    const { name, value } = e.target;
-    console.log(`Input changed in section "${sectionName}", field "${name}":`, value);
+  const handleInputChange = (e, fieldName) => {
+    const { value } = e.target;
+    const sectionName = config.sections[currentStep].name;
+
     setFormData((prev) => ({
       ...prev,
-      [sectionName]: {
-        ...prev[sectionName],
-        [name]: value,
+      sections: {
+        ...prev.sections,
+        [sectionName]: {
+          ...prev.sections[sectionName],
+          [fieldName]: value,
+        },
       },
     }));
   };
 
-  const handleDiceRoll = async (sectionName, fieldName) => {
+  const saveCharacter = async (data) => {
     try {
-      console.log(`Rolling dice for section "${sectionName}", field "${fieldName}"`);
-      const rollResult = await rollDice("4d6");
-      const sortedRolls = rollResult.rolls.map((r) => r.value).sort((a, b) => b - a);
-      const total = sortedRolls.slice(0, 3).reduce((sum, val) => sum + val, 0);
-      console.log(`Dice roll result for "${fieldName}":`, total);
-
-      setFormData((prev) => ({
-        ...prev,
-        [sectionName]: {
-          ...prev[sectionName],
-          [fieldName]: total,
-        },
-      }));
-    } catch (error) {
-      console.error("Error rolling dice:", error);
+      const response = await fetch("/api/characters", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error("Не вдалося зберегти персонажа.");
+      console.log("Character saved successfully:", data);
+    } catch (err) {
+      console.error("Error saving character:", err);
     }
   };
 
-  const saveCharacter = () => {
-    console.log("Saving character with formData:", formData);
-    fetch("/api/characters", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        system: "dnd",
-        sections: formData,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Character saved successfully:", data);
-        window.location.href = `/character/${data.character.id}`;
-      })
-      .catch((err) => console.error("Error saving character:", err));
+  const handleNextStep = async () => {
+    if (currentStep < config.sections.length - 1) {
+      await saveCharacter({ ...formData, system: config.name }); // Додаємо system
+      setCurrentStep((prev) => prev + 1);
+    }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await saveCharacter({ ...formData, system: config.name }); // Додаємо system
+    navigate(`/characters/${formData.sections.General.name}`); // Переходимо на сторінку перегляду
+  };
+
+  const currentSection = config.sections[currentStep];
+
   return (
-    <div className="character-form">
-      {sections.map((section) => (
-        <div key={section.name} className="character-form__section">
-          <h2>{section.name}</h2>
-          {section.fields.map((field) => (
-            <div key={field.name} className="character-form__field">
-              <label>{field.label}</label>
-              <div className="character-form__input-group">
-                <input
-                  type={field.type}
-                  name={field.name}
-                  value={formData[section.name]?.[field.name] || ""}
-                  onChange={(e) => handleInputChange(e, section.name)}
-                  required={field.required}
-                />
-                {field.rollable && (
-                  <button
-                    type="button"
-                    className="dice-roll-button"
-                    onClick={() => handleDiceRoll(section.name, field.name)}
-                  >
-                    🎲
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+    <form className="dnd-form" onSubmit={handleSubmit}>
+      <h2>{currentSection.name}</h2>
+      {currentSection.fields.map((field) => (
+        <div key={field.name} className="form-field">
+          <label htmlFor={field.name}>{field.label}</label>
+          <input
+            id={field.name}
+            name={field.name}
+            type={field.type || "text"}
+            defaultValue={formData.sections[currentSection.name]?.[field.name] || field.default || ""}
+            required={field.required || false}
+            onChange={(e) => handleInputChange(e, field.name)}
+          />
         </div>
       ))}
-      <div className="character-form__navigation">
-        <button onClick={saveCharacter} className="save-button">
-          Зберегти
-        </button>
+      <div className="form-navigation">
+        {currentStep > 0 && <button type="button" onClick={() => setCurrentStep((prev) => prev - 1)}>Назад</button>}
+        {currentStep < config.sections.length - 1 ? (
+          <button type="button" onClick={handleNextStep}>Далі</button>
+        ) : (
+          <button type="submit">Зберегти персонажа</button>
+        )}
       </div>
-    </div>
+    </form>
   );
 };
 

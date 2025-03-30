@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/static/css/main.301f415d.css",
-    "main.js": "/static/js/main.ed8f4acb.js",
-    "static/js/392.4826f585.chunk.js": "/static/js/392.4826f585.chunk.js",
+    "main.js": "/static/js/main.edf6a154.js",
+    "static/js/213.f582c329.chunk.js": "/static/js/213.f582c329.chunk.js",
+    "static/js/449.09e736e2.chunk.js": "/static/js/449.09e736e2.chunk.js",
     "static/media/dice-b16-d20.svg": "/static/media/dice-b16-d20.853194a1e17e9e05b802ad53a4352d27.svg",
     "static/media/dice-o32-d20.svg": "/static/media/dice-o32-d20.e62b3dc23b54dcfa5546a1253d5e359c.svg",
     "static/media/dice-o32-d12.svg": "/static/media/dice-o32-d12.87ea4dae47dabef2ca601273353a65cf.svg",
@@ -17,10 +18,10 @@
     "static/media/dice-o32-d4.svg": "/static/media/dice-o32-d4.216ef3b8fc793ae14ddad00f03bfe5cc.svg",
     "index.html": "/index.html",
     "main.301f415d.css.map": "/static/css/main.301f415d.css.map",
-    "main.ed8f4acb.js.map": "/static/js/main.ed8f4acb.js.map"
+    "main.edf6a154.js.map": "/static/js/main.edf6a154.js.map"
   },
   "entrypoints": [
     "static/css/main.301f415d.css",
-    "static/js/main.ed8f4acb.js"
+    "static/js/main.edf6a154.js"
   ]
 }

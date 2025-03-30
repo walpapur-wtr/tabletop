@@ -17,13 +17,13 @@ const CharacterPage = () => {
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isDiceRollerVisible, setDiceRollerVisible] = useState(false);
-  
+
   const toggleDiceRoller = () => {
     setDiceRollerVisible(!isDiceRollerVisible);
-  }
+  };
 
-  //отримання даних про персонажа з сервера
   useEffect(() => {
+    // Завантаження персонажа
     fetch(`/api/characters/${name}`)
       .then((res) => {
         if (!res.ok) {
@@ -46,6 +46,7 @@ const CharacterPage = () => {
         setLoading(false);
       })
       .catch((err) => {
+        console.error("Error loading character or config:", err);
         setError(err.message);
         setLoading(false);
       });
@@ -59,24 +60,33 @@ const CharacterPage = () => {
       },
       body: JSON.stringify(updatedCharacter),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Не вдалося оновити персонажа");
+        }
+        return res.json();
+      })
       .then((data) => {
         setCharacter(data.character);
         setIsEditing(false);
       })
-      .catch((err) => console.error("Error updating character:", err));
+      .catch((err) => {
+        console.error("Error updating character:", err);
+        setError("Не вдалося оновити персонажа.");
+      });
   };
 
   const handleCancel = () => {
     setIsEditing(false);
   };
 
+  if (loading) return <p>Завантаження...</p>;
+  if (error) return <p className="error">{error}</p>;
+
   return (
     <div className="character-page" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <HeaderComponent />
       <div className="character-page__content" style={{ flex: 1 }}>
-        {loading && <p>Завантаження...</p>}
-        {error && <p className="error">{error}</p>}
         {character && config && (
           isEditing ? (
             <CharacterSheetEdit character={character} onSave={handleSave} onCancel={handleCancel} />

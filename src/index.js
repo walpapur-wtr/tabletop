@@ -17,7 +17,7 @@ root.render(
         <Route path="/" element={<HomePage />} />
         <Route path="/characters/:name" element={<CharacterPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/create-character/:system" element={<CreateCharacterPage />} />
+        <Route path="/create-character/:system/:version" element={<CreateCharacterPage />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
