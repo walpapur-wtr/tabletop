@@ -54,3 +54,22 @@
   cursor: pointer;
   color: #555;
 }
+
+.system-modal__sublist {
+  list-style: none;
+  padding-left: 20px;
+}
+
+.system-modal__subitem {
+  padding: 5px;
+  margin: 5px 0;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.system-modal__subitem:hover {
+  background-color: #f0f0f0;
+}

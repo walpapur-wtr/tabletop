@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { CharacterCard } from "./CharacterCard-component";
 import { useNavigate } from "react-router-dom";
 import "./CharacterGrid-styles.css";
-import SystemModal from "../components/SystemModal-component";
+import SystemModal from "./CreateCharacter/SystemModal-component";
 
 export const CharacterGrid = () => {
   const [characters, setCharacters] = useState([]);
@@ -19,12 +19,10 @@ export const CharacterGrid = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleSystemSelect = (system, basedOn) => {
-  setIsSystemModalVisible(false);
-  const systemName = system.replace(".json", ""); // Remove .json if present
-  const version = systemName; // Використовуємо systemName як версію
-  console.log(`Navigating to create-character/${systemName}/${version}`);
-  navigate(`/create-character/${systemName}/${version}`);
+  const handleSystemSelect = (system, version) => {
+    setIsSystemModalVisible(false);
+    console.log(`Navigating to create-character/${system}/${version}`);
+    navigate(`/create-character/${system}/${version}`);
 };
 
   return (

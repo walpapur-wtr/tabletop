@@ -1,5 +1,7 @@
 {
-  "name": "dnd-5e",
+  "name": "DnD 5-th edition",
+  "author": "Wizards of the coast",
+  "basedOn": "DnD",
   "sections": [
     {
       "name": "General",

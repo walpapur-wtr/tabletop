@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { rollDice } from "../../DiceRoller/Roll-script";
 
-const DnDForm = ({ sections = [] }) => { // Default to an empty array
+const PathfinderForm = ({ sections = [] }) => { // Default to an empty array
   console.log("PathFinderForm received sections:", sections);
   const [formData, setFormData] = useState({});
 
@@ -100,4 +100,4 @@ const DnDForm = ({ sections = [] }) => { // Default to an empty array
   );
 };
 
-export default DnDForm;
+export default PathfinderForm;

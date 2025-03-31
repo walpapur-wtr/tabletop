@@ -1,9 +1,11 @@
 {
   "files": {
-    "main.css": "/static/css/main.301f415d.css",
-    "main.js": "/static/js/main.edf6a154.js",
-    "static/js/213.f582c329.chunk.js": "/static/js/213.f582c329.chunk.js",
-    "static/js/449.09e736e2.chunk.js": "/static/js/449.09e736e2.chunk.js",
+    "main.css": "/static/css/main.78f00f55.css",
+    "main.js": "/static/js/main.f969c6ee.js",
+    "static/js/317.0f78e90f.chunk.js": "/static/js/317.0f78e90f.chunk.js",
+    "static/js/991.0f3186f0.chunk.js": "/static/js/991.0f3186f0.chunk.js",
+    "static/js/554.c18656fe.chunk.js": "/static/js/554.c18656fe.chunk.js",
+    "static/js/162.39922b18.chunk.js": "/static/js/162.39922b18.chunk.js",
     "static/media/dice-b16-d20.svg": "/static/media/dice-b16-d20.853194a1e17e9e05b802ad53a4352d27.svg",
     "static/media/dice-o32-d20.svg": "/static/media/dice-o32-d20.e62b3dc23b54dcfa5546a1253d5e359c.svg",
     "static/media/dice-o32-d12.svg": "/static/media/dice-o32-d12.87ea4dae47dabef2ca601273353a65cf.svg",
@@ -17,11 +19,11 @@
     "static/media/dice-b16-d4.svg": "/static/media/dice-b16-d4.8841094385a6401c6a0f879376d62dba.svg",
     "static/media/dice-o32-d4.svg": "/static/media/dice-o32-d4.216ef3b8fc793ae14ddad00f03bfe5cc.svg",
     "index.html": "/index.html",
-    "main.301f415d.css.map": "/static/css/main.301f415d.css.map",
-    "main.edf6a154.js.map": "/static/js/main.edf6a154.js.map"
+    "main.78f00f55.css.map": "/static/css/main.78f00f55.css.map",
+    "main.f969c6ee.js.map": "/static/js/main.f969c6ee.js.map"
   },
   "entrypoints": [
-    "static/css/main.301f415d.css",
-    "static/js/main.edf6a154.js"
+    "static/css/main.78f00f55.css",
+    "static/js/main.f969c6ee.js"
   ]
 }

@@ -118,12 +118,12 @@ app.get("/api/characters/:name", (req, res) => {
 
 // Створити нового персонажа
 app.post("/api/characters", (req, res) => {
-  const { system, sections } = req.body;
-  console.log("Received character creation request:", { system, sections });
+  const { system, version, sections } = req.body;
+  console.log("Received character creation request:", { system, version, sections });
 
-  if (!system) {
-    console.error("System not specified in request.");
-    return res.status(400).json({ error: "Необхідно вказати систему." });
+  if (!system || !version) {
+    console.error("System or version not specified in request.");
+    return res.status(400).json({ error: "Необхідно вказати систему та версію." });
   }
 
   if (!sections || !sections.General || !sections.General.name) {
@@ -131,15 +131,16 @@ app.post("/api/characters", (req, res) => {
     return res.status(400).json({ error: "Поле General.name є обов'язковим." });
   }
 
-  const configFilePath = path.join(__dirname, "configs", `${system}.json`);
+  const configFilePath = path.join(__dirname, "configs", system, `${version}.json`);
   if (!fs.existsSync(configFilePath)) {
     console.error(`Config file not found: ${configFilePath}`);
-    return res.status(400).json({ error: "Невідома система." });
+    return res.status(400).json({ error: "Невідома система або версія." });
   }
 
   const newCharacter = {
     id: Date.now().toString(),
     system,
+    version,
     sections,
   };
 
@@ -185,7 +186,7 @@ app.get("/configs/:system.json", (req, res) => {
 
 app.get("/api/systems/:system/:version", (req, res) => {
   const { system, version } = req.params;
-  const configPath = path.join(__dirname, "configs", `${version}.json`); // Використовуємо лише версію
+  const configPath = path.join(__dirname, "configs", system, `${version}.json`);
 
   console.log("Requested system:", system);
   console.log("Requested version:", version);
@@ -204,25 +205,33 @@ app.get("/api/systems/:system/:version", (req, res) => {
 app.get("/api/configs", (req, res) => {
   const configsDir = path.join(__dirname, "configs");
 
-  fs.readdir(configsDir, (err, files) => {
+  fs.readdir(configsDir, { withFileTypes: true }, (err, folders) => {
     if (err) {
       return res.status(500).json({ error: "Помилка читання директорії конфігурацій." });
     }
 
-    const configs = files
-      .filter((file) => file.endsWith(".json"))
-      .map((file) => {
-        const filePath = path.join(configsDir, file);
-        const configData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    const systems = folders
+      .filter((folder) => folder.isDirectory()) // Перевіряємо, чи це папка
+      .map((folder) => {
+        const systemPath = path.join(configsDir, folder.name);
+        const files = fs.readdirSync(systemPath).filter((file) => file.endsWith(".json"));
+
         return {
-          filename: file,
-          name: configData.name || "Unknown",
-          author: configData.author || "Unknown",
-          basedOn: configData.basedOn || "Custom",
+          system: folder.name,
+          configs: files.map((file) => {
+            const filePath = path.join(systemPath, file);
+            const configData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+            return {
+              filename: file,
+              name: configData.name || "Unknown",
+              author: configData.author || "Unknown",
+              basedOn: configData.basedOn || "Custom",
+            };
+          }),
         };
       });
 
-    res.status(200).json(configs);
+    res.status(200).json(systems);
   });
 });
 

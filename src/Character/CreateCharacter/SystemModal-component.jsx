@@ -17,12 +17,19 @@ const SystemModal = ({ onClose, onSystemSelect }) => {
         <h3 className="system-modal__title">Виберіть систему</h3>
         <ul className="system-modal__list">
           {systems.map((system) => (
-            <li
-              key={system.filename}
-              className="system-modal__item"
-              onClick={() => onSystemSelect(system.filename, system.basedOn)}
-            >
-              <strong>{system.name}</strong> by {system.author} (Based on: {system.basedOn})
+            <li key={system.system} className="system-modal__item">
+              <strong>{system.system}</strong>
+              <ul className="system-modal__sublist">
+                {system.configs.map((config) => (
+                  <li
+                    key={config.filename}
+                    className="system-modal__subitem"
+                    onClick={() => onSystemSelect(system.system, config.filename.replace(".json", ""))}
+                  >
+                    {config.name} ({config.version})
+                  </li>
+                ))}
+              </ul>
             </li>
           ))}
         </ul>

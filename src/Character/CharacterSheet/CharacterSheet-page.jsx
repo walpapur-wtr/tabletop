@@ -23,34 +23,35 @@ const CharacterPage = () => {
   };
 
   useEffect(() => {
-    // Завантаження персонажа
-    fetch(`/api/characters/${name}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Персонаж не знайдений");
-        }
-        return res.json();
-      })
-      .then((data) => {
-        setCharacter(data);
-        return fetch(`/configs/${data.system}.json`);
-      })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Конфігураційний файл не знайдений");
-        }
-        return res.json();
-      })
-      .then((configData) => {
-        setConfig(configData);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error loading character or config:", err);
-        setError(err.message);
-        setLoading(false);
-      });
-  }, [name]);
+  // Завантаження персонажа
+  fetch(`/api/characters/${name}`)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Персонаж не знайдений");
+      }
+      return res.json();
+    })
+    .then((data) => {
+      setCharacter(data);
+      // Формуємо правильний шлях до конфігураційного файлу
+      return fetch(`/api/systems/${data.system}/${data.version}`);
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error("Конфігураційний файл не знайдений");
+      }
+      return res.json();
+    })
+    .then((configData) => {
+      setConfig(configData);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error("Error loading character or config:", err);
+      setError(err.message);
+      setLoading(false);
+    });
+}, [name]);
 
   const handleSave = (updatedCharacter) => {
     fetch(`/api/characters/${name}`, {
