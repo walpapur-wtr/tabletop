@@ -212,11 +212,10 @@ const handleDisadvantageRoll = () => {
         </div>
       </div>
 
-      <div className="dice-roller__actions">
-        <button className="dice-roller__roll-button" onClick={handleRoll}>
-          Здійснити кидок
-        </button>
-      </div>
+      
+      <button className="dice-roller__roll-button" onClick={handleRoll}>
+        Здійснити кидок
+      </button>
 
       {lastRoll && (
   <div className="dice-roller__last-roll">
@@ -259,9 +258,6 @@ const handleDisadvantageRoll = () => {
 
       {isHistoryVisible && (
         <div className="roll-history-popup">
-          <button className="close-popup" onClick={() => setHistoryVisible(false)}>
-            ✖
-          </button>
           <RollHistoryComponent
             history={history}
             onDelete={deleteRoll}

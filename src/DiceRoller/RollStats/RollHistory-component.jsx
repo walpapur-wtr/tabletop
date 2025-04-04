@@ -4,7 +4,7 @@ import "./RollHistory-styles.css";
 const RollHistoryComponent = ({ history, onDelete, onRepeat, onClose }) => {
   return (
     <div className="roll-history">
-      <button className="close-popup" onClick={onClose}>✖</button>
+      <button className="close-table" onClick={onClose}>✖</button>
       <table className="roll-history__table">
         <thead>
           <tr>
@@ -18,7 +18,6 @@ const RollHistoryComponent = ({ history, onDelete, onRepeat, onClose }) => {
             <tr key={index}>
               <td>
                 <div>{roll.formula}</div>
-              
               </td>
               <td>{roll.total}</td>
               <td>
