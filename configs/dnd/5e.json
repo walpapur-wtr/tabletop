@@ -1,0 +1,49 @@
+{
+  "name": "DnD 5-th edition",
+  "author": "Wizards of the coast",
+  "basedOn": "DnD",
+  "sections": [
+    {
+      "name": "General",
+      "fields": [
+        { "name": "name", "label": "Ім'я", "type": "text", "required": true, "placeholder": "Червоновус"},
+        { "name": "race", "label": "Раса", "type": "text", "required": true, "placeholder": "Гном" },
+        { "name": "classes", "label": "Класи", "type": "array", "required": false, "placeholder": "Бард" },
+        { "name": "background-name", "label": "Передісторія", "type": "text", "required": false, "placeholder": "Мандрівник" },
+        { "name": "description", "label": "Опис", "type": "textarea", "required": false, "placeholder": "Гном з характерними яскраво рудими вусами" },
+        { "name": "level", "label": "Рівень", "type": "text", "required": true, "placeholder": "7" }
+      ]
+    },
+    {
+      "name": "Attributes",
+      "fields": [
+        { "name": "strength", "label": "Сила", "type": "number", "required": true, "rollable": true },
+        { "name": "dexterity", "label": "Спритність", "type": "number", "required": true, "rollable": true },
+        { "name": "constitution", "label": "Тілобудова", "type": "number", "required": true, "rollable": true },
+        { "name": "intelligence", "label": "Інтелект", "type": "number", "required": true, "rollable": true },
+        { "name": "wisdom", "label": "Мудрість", "type": "number", "required": true, "rollable": true },
+        { "name": "charisma", "label": "Харизма", "type": "number", "required": true, "rollable": true }
+      ]
+    },
+    {
+      "name": "Health and Defense",
+      "fields": [
+        { "name": "ac", "label": "Захист", "type": "number", "required": true },
+        { "name": "hp", "label": "Здоров'я", "type": "number", "required": true },
+        { "name": "speed", "label": "Пересування", "type": "number", "required": true }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "fields": [
+        { "name": "weapons", "label": "Зброя", "type": "array", "required": false },
+        { "name": "equipment", "label": "Спорядження", "type": "array", "required": false },
+        { "name": "treasure-pp", "label": "Платинові монети", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-ep", "label": "Електричні", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-gp", "label": "Золоті", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-sp", "label": "Срібні", "type": "number", "required": false, "default": 0 },
+        { "name": "treasure-cp", "label": "Мідні", "type": "number", "required": false, "default": 0 }
+      ]
+    }
+  ]
+}

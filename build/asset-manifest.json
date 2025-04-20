@@ -1,10 +1,11 @@
 {
   "files": {
-    "main.css": "/static/css/main.00221c41.css",
-    "main.js": "/static/js/main.a5a257fc.js",
-    "static/js/866.427d6d47.chunk.js": "/static/js/866.427d6d47.chunk.js",
-    "static/js/392.5f918f11.chunk.js": "/static/js/392.5f918f11.chunk.js",
-    "static/js/23.35fc2c5a.chunk.js": "/static/js/23.35fc2c5a.chunk.js",
+    "main.css": "/static/css/main.31cb7874.css",
+    "main.js": "/static/js/main.4899313a.js",
+    "static/js/317.0f78e90f.chunk.js": "/static/js/317.0f78e90f.chunk.js",
+    "static/js/991.0f3186f0.chunk.js": "/static/js/991.0f3186f0.chunk.js",
+    "static/js/554.c18656fe.chunk.js": "/static/js/554.c18656fe.chunk.js",
+    "static/js/162.39922b18.chunk.js": "/static/js/162.39922b18.chunk.js",
     "static/media/dice-b16-d20.svg": "/static/media/dice-b16-d20.853194a1e17e9e05b802ad53a4352d27.svg",
     "static/media/dice-o32-d20.svg": "/static/media/dice-o32-d20.e62b3dc23b54dcfa5546a1253d5e359c.svg",
     "static/media/dice-o32-d12.svg": "/static/media/dice-o32-d12.87ea4dae47dabef2ca601273353a65cf.svg",
@@ -18,11 +19,11 @@
     "static/media/dice-b16-d4.svg": "/static/media/dice-b16-d4.8841094385a6401c6a0f879376d62dba.svg",
     "static/media/dice-o32-d4.svg": "/static/media/dice-o32-d4.216ef3b8fc793ae14ddad00f03bfe5cc.svg",
     "index.html": "/index.html",
-    "main.00221c41.css.map": "/static/css/main.00221c41.css.map",
-    "main.a5a257fc.js.map": "/static/js/main.a5a257fc.js.map"
+    "main.31cb7874.css.map": "/static/css/main.31cb7874.css.map",
+    "main.4899313a.js.map": "/static/js/main.4899313a.js.map"
   },
   "entrypoints": [
-    "static/css/main.00221c41.css",
-    "static/js/main.a5a257fc.js"
+    "static/css/main.31cb7874.css",
+    "static/js/main.4899313a.js"
   ]
 }

@@ -3,6 +3,8 @@ const fs = require("fs");
 const path = require("path");
 const bodyParser = require("body-parser");
 const mysql = require('mysql2');
+const jwt = require("jsonwebtoken"); // Add this line
+const SECRET_KEY = "your_secret_key"; // Replace with a secure key
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +34,24 @@ db.connect((err) => {
     }
 });
 
+// Middleware to verify token and extract username for protected routes
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, SECRET_KEY, (err, user) => {
+      if (err) {
+        console.error("Invalid or expired token:", err.message);
+        return res.status(403).json({ message: "Invalid or expired token" });
+      }
+      req.username = user.username; // Attach username to the request
+      next();
+    });
+  } else {
+    console.warn("Authorization header missing");
+    return res.status(401).json({ message: "Authorization header missing" });
+  }
+};
 
 // Registration endpoint
 app.post('/api/register', (req, res) => {
@@ -44,6 +64,14 @@ app.post('/api/register', (req, res) => {
             return res.status(500).json({ message: 'Помилка реєстрації', error: err });
         }
         console.log('Результати SQL-запиту:', results); // Логування результату для перевірки
+
+        // Create a directory for the user
+        const userDir = path.join(__dirname, "users", username);
+        if (!fs.existsSync(userDir)) {
+            fs.mkdirSync(userDir, { recursive: true });
+            console.log(`Директорія для користувача ${username} створена.`);
+        }
+
         res.status(201).json({ message: 'Користувач успішно зареєстрований' });
     });
 });
@@ -52,7 +80,6 @@ app.post('/api/register', (req, res) => {
 app.post('/api/login', (req, res) => {
     const { email, username, password } = req.body;
 
-    // Якщо передано email, виконуємо пошук за email
     let sql;
     let params;
 
@@ -68,12 +95,14 @@ app.post('/api/login', (req, res) => {
 
     db.query(sql, params, (err, results) => {
         if (err) {
-            console.error('Помилка SQL-запиту:', err);  // Логування помилки
+            console.error('Помилка SQL-запиту:', err);
             return res.status(500).json({ message: 'Login failed' });
         }
 
         if (results.length > 0) {
-            res.json({ message: 'Login successful' });
+            const user = results[0];
+            const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: "1h" }); // Generate token
+            res.json({ message: 'Login successful', token, username: user.username });
         } else {
             res.status(401).json({ message: 'Invalid email/username or password' });
         }
@@ -85,7 +114,7 @@ if (!fs.existsSync(charactersDir)) {
   fs.mkdirSync(charactersDir);
 }
 
-// Отримати всіх персонажів
+// Public route to get all characters
 app.get("/api/characters", (req, res) => {
   fs.readdir(charactersDir, (err, files) => {
     if (err) {
@@ -102,12 +131,13 @@ app.get("/api/characters", (req, res) => {
   });
 });
 
-// Отримати персонажа за ім'ям
+// Public route to get a character by name
 app.get("/api/characters/:name", (req, res) => {
   const characterName = decodeURIComponent(req.params.name);
   const characterFile = path.join(charactersDir, `${characterName}.json`);
 
   if (!fs.existsSync(characterFile)) {
+    console.error(`Character not found: ${characterName}`);
     return res.status(404).json({ error: "Персонажа не знайдено." });
   }
 
@@ -115,86 +145,129 @@ app.get("/api/characters/:name", (req, res) => {
   res.status(200).json(characterData);
 });
 
-// Створити нового персонажа
-app.post("/api/characters", (req, res) => {
-  const { system, sections } = req.body;
+// Protected route to create a new character
+app.post("/api/characters", verifyToken, (req, res) => {
+  const { system, version, sections } = req.body;
+  const username = req.username; // Get the logged-in user's username
+  console.log("Received character creation request:", { system, version, sections, username });
 
-  if (!system) {
-    return res.status(400).json({ error: "Необхідно вказати систему." });
+  if (!username) {
+    return res.status(401).json({ error: "Користувач не авторизований." });
   }
 
-  const configFilePath = path.join(__dirname, "configs", `${system}.json`);
-  console.log(`Loading config file from: ${configFilePath}`);
+  if (!system || !version) {
+    console.error("System or version not specified in request.");
+    return res.status(400).json({ error: "Необхідно вказати систему та версію." });
+  }
 
+  if (!sections || !sections.General || !sections.General.name) {
+    console.error("General section or name is missing.");
+    return res.status(400).json({ error: "Поле General.name є обов'язковим." });
+  }
+
+  const configFilePath = path.join(__dirname, "configs", system, `${version}.json`);
   if (!fs.existsSync(configFilePath)) {
     console.error(`Config file not found: ${configFilePath}`);
-    return res.status(400).json({ error: "Невідома система." });
-  }
-
-  const config = JSON.parse(fs.readFileSync(configFilePath, "utf-8"));
-
-  if (!config.sections) {
-    console.error(`Invalid config file: ${configFilePath}`);
-    return res.status(400).json({ error: "Невірний формат конфігураційного файлу." });
-  }
-
-  // Validate required fields only for the first step
-  const firstStepSections = config.sections.filter(section => section.step === 1);
-  const requiredFields = firstStepSections.flatMap(section => section.fields.filter(field => field.required).map(field => `${section.name}.${field.name}`));
-
-  for (const field of requiredFields) {
-    const [sectionName, fieldName] = field.split('.');
-    if (!sections[sectionName] || sections[sectionName][fieldName] === undefined) {
-      return res.status(400).json({ error: `Поле ${field} є обов'язковим.` });
-    }
+    return res.status(400).json({ error: "Невідома система або версія." });
   }
 
   const newCharacter = {
     id: Date.now().toString(),
+    user: username, // Add the username to the character data
     system,
-    sections
+    version,
+    sections,
   };
 
-  const characterFilePath = path.join(charactersDir, `${sections["General"].name}.json`);
-
-  fs.writeFile(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8", (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Помилка запису у файл." });
-    }
-    res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
-  });
+  const characterFilePath = path.join(charactersDir, `${sections.General.name}.json`);
+  fs.writeFileSync(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8");
+  console.log("Character saved successfully:", newCharacter);
+  res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
 });
 
-// Оновити персонажа
-app.put("/api/characters/:name", (req, res) => {
+// Protected route to update a character
+app.put("/api/characters/:name", verifyToken, (req, res) => {
   const characterName = decodeURIComponent(req.params.name);
   const characterFile = path.join(charactersDir, `${characterName}.json`);
 
   if (!fs.existsSync(characterFile)) {
+    console.error(`Character not found: ${characterName}`);
     return res.status(404).json({ error: "Персонажа не знайдено." });
   }
 
   const { sections } = req.body;
   const characterData = JSON.parse(fs.readFileSync(characterFile, "utf-8"));
 
-  // Оновлюємо дані персонажа
   characterData.sections = { ...characterData.sections, ...sections };
 
-  fs.writeFile(characterFile, JSON.stringify(characterData, null, 2), "utf-8", (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Помилка запису у файл." });
-    }
-    res.status(200).json({ message: "Персонаж оновлено.", character: characterData });
-  });
+  fs.writeFileSync(characterFile, JSON.stringify(characterData, null, 2), "utf-8");
+  console.log("Character updated successfully:", characterData);
+  res.status(200).json({ message: "Персонаж оновлено.", character: characterData });
 });
 
 // Serve configuration files
 app.get("/configs/:system.json", (req, res) => {
   const configFilePath = path.join(__dirname, "configs", `${req.params.system}.json`);
+  console.log("Requested config file path:", configFilePath);
+
   if (!fs.existsSync(configFilePath)) {
+    console.error("Configuration file not found:", configFilePath);
     return res.status(404).send("Configuration file not found");
   }
+
+  console.log("Configuration file found:", configFilePath);
   res.sendFile(configFilePath);
+});
+
+app.get("/api/systems/:system/:version", (req, res) => {
+  const { system, version } = req.params;
+  const configPath = path.join(__dirname, "configs", system, `${version}.json`);
+
+  console.log("Requested system:", system);
+  console.log("Requested version:", version);
+  console.log("Config file path:", configPath);
+
+  if (!fs.existsSync(configPath)) {
+    console.error("Configuration file not found:", configPath);
+    return res.status(404).json({ error: "Configuration file not found" });
+  }
+
+  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  res.json(config);
+});
+
+// Endpoint to fetch configuration files with metadata
+app.get("/api/configs", (req, res) => {
+  const configsDir = path.join(__dirname, "configs");
+
+  fs.readdir(configsDir, { withFileTypes: true }, (err, folders) => {
+    if (err) {
+      return res.status(500).json({ error: "Помилка читання директорії конфігурацій." });
+    }
+
+    const systems = folders
+      .filter((folder) => folder.isDirectory()) // Перевіряємо, чи це папка
+      .map((folder) => {
+        const systemPath = path.join(configsDir, folder.name);
+        const files = fs.readdirSync(systemPath).filter((file) => file.endsWith(".json"));
+
+        return {
+          system: folder.name,
+          configs: files.map((file) => {
+            const filePath = path.join(systemPath, file);
+            const configData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+            return {
+              filename: file,
+              name: configData.name || "Unknown",
+              author: configData.author || "Unknown",
+              basedOn: configData.basedOn || "Custom",
+            };
+          }),
+        };
+      });
+
+    res.status(200).json(systems);
+  });
 });
 
 // Обробка всіх інших маршрутів (для React Router)

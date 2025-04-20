@@ -1,0 +1,28 @@
+{
+  "id": "1744651910145",
+  "user": "maksym_lun",
+  "system": "dnd",
+  "version": "lunocus",
+  "sections": {
+    "General": {
+      "name": "Ней",
+      "race": "Санґв",
+      "description": "Служитель Кельта",
+      "level": "6"
+    },
+    "Attributes": {
+      "strength": "13",
+      "dexterity": "13",
+      "constitution": "13",
+      "intelligence": "3",
+      "wisdom": "4",
+      "charisma": "20"
+    },
+    "Inventory": {
+      "weapons": "Кинжали",
+      "equipment": "Книга",
+      "money-asim": "50",
+      "money-tezar": "1440"
+    }
+  }
+}

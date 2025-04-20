@@ -1,15 +1,18 @@
 /* Home-styles.css */
-
 .home-page {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh; 
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Контент не виходить за рамки, не з'являється скрол */
 }
 
-.mobile-dice-roller-icon {
-    position: fixed;
+.home-page__content {
+    flex: 1; /* Весь вміст сторінки займає все місце між хедером та футером */
+}
+
+.home-page__dice-roller-icon{
+    position: fixed; 
     bottom: 20px;
     right: 20px;
     width: 60px;
@@ -24,15 +27,18 @@
     cursor: pointer;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 100;
+    max-width: 100%;
+    max-height: 100%;
+    box-sizing: border-box;
 }
 
-.mobile-dice-roller-popup {
+.home-page__dice-roller-popup {
     position: fixed;
     bottom: 90px;
     right: 20px;
     width: 100%;
     max-width: 500px;
-    background-color: rgba(0, 0, 0, 0.95);
+    background-color: rgba(0, 0, 0, 0.5);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -40,14 +46,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: slide-in 0.3s ease-out;
+    animation: slide-in 0.5s ease-out;
     box-sizing: border-box;
     left: auto;
     transform: none;
 }
 
 @media (max-width: 600px) {
-    .mobile-dice-roller-popup {
+    .home-page__dice-roller-popup {
         bottom: 70px;
         right: 10px;
         padding: 10px;
@@ -56,7 +62,7 @@
         transform: translateX(-50%);
     }
 
-    .mobile-dice-roller-icon {
+    .home-page__dice-roller-icon {
         bottom: 10px;
         right: 10px;
         width: 50px;
@@ -77,7 +83,7 @@
     }
 }
 
-.mobile-dice-roller-popup .close-popup {
+.home-page__dice-roller-popup .home-page__close-popup /* ??? */{
     position: absolute;
     top: 10px;
     right: 10px;

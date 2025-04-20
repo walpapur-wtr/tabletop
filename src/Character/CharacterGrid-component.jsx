@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { CharacterCard } from "./CharacterCard-component";
-import { CharacterForm } from "./CharacterForm-component";
+import { useNavigate } from "react-router-dom";
 import "./CharacterGrid-styles.css";
+import SystemModal from "./CreateCharacter/SystemModal-component";
 
 export const CharacterGrid = () => {
   const [characters, setCharacters] = useState([]);
-  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isSystemModalVisible, setIsSystemModalVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch characters from server
-    fetch("/api/characters")
-      .then((res) => res.json())
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    if (!token) {
+      console.error("Token not found. Please log in again.");
+      return;
+    }
+
+    fetch("/api/characters", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // Include token in the header
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch characters");
+        }
+        return res.json();
+      })
       .then((data) => {
         console.log("Characters loaded:", data);
         setCharacters(data);
@@ -18,24 +35,10 @@ export const CharacterGrid = () => {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleAddCharacter = (newCharacter) => {
-    // Send new character to server
-    fetch("/api/characters", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newCharacter),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.character) {
-          setCharacters((prev) => [...prev, data.character]);
-        } else {
-          console.error("Error creating character:", data.error);
-        }
-      })
-      .catch((err) => console.error(err));
-
-    setIsFormVisible(false);
+  const handleSystemSelect = (system, version) => {
+    setIsSystemModalVisible(false);
+    console.log(`Navigating to create-character/${system}/${version}`);
+    navigate(`/create-character/${system}/${version}`);
   };
 
   return (
@@ -43,14 +46,12 @@ export const CharacterGrid = () => {
       {characters.map((character) => (
         <CharacterCard key={character.id} character={character} />
       ))}
-      <CharacterCard onAddClick={() => setIsFormVisible(true)} />
-      {isFormVisible && (
-        <div className="character-grid__form">
-          <CharacterForm
-            onSubmit={handleAddCharacter}
-            onCancel={() => setIsFormVisible(false)}
-          />
-        </div>
+      <CharacterCard onAddClick={() => setIsSystemModalVisible(true)} />
+      {isSystemModalVisible && (
+        <SystemModal
+          onClose={() => setIsSystemModalVisible(false)}
+          onSystemSelect={handleSystemSelect}
+        />
       )}
     </div>
   );

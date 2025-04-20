@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { FaHome, FaUser } from "react-icons/fa"; // Імпорт іконок
 import { Link } from "react-router-dom";
-import "../styles/Header.css";
+import "../styles/HeadFooter.css";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false); // Випадаюче меню
@@ -13,29 +13,28 @@ const Header = () => {
 
   return (
     <header className="header">
-      <nav className="nav">
-        <div className="nav-left">
-          <Link to="/" className="nav-link">
-            <FaHome className="icon" />
-            <span className="nav-text">Home</span>
+      <nav className="header__nav">
+        <div className="header__nav-left">
+          <Link to="/" className="header__nav-link">
+            <FaHome className="header__icon" />
+            <span className="header__nav-text">Home</span>
           </Link>
-          <Link to="/login" className="nav-link">
-            <FaUser className="icon" />
-            <span className="nav-text">User Profile</span>
+          <Link to="/my-profile" className="header__nav-link">
+            <FaUser className="header__icon" />
+            <span className="header__nav-text">User Profile</span>
           </Link>
-            
         </div>
-        <div className="nav-right">
-          <div className="nav-item">
-            <button className="nav-link dropdown-toggle" onClick={toggleDropdown}>
+        <div className="header__nav-right">
+          <div className="header__nav-item">
+            <button className="header__nav-link header__dropdown-toggle" onClick={toggleDropdown}>
               Coming Soon
             </button>
             {isDropdownOpen && (
-              <div className="dropdown">
-                <a href="#spells" className="dropdown-link">Заклинання</a>
-                <a href="#monsters" className="dropdown-link">Монстри</a>
-                <a href="#campaigns" className="dropdown-link">Кампанії</a>
-                <a href="#dice-roller" className="dropdown-link">Кидки кубиків</a>
+              <div className="header__dropdown">
+                <a href="#spells" className="header__dropdown-link">Заклинання</a>
+                <a href="#monsters" className="header__dropdown-link">Монстри</a>
+                <a href="#campaigns" className="header__dropdown-link">Кампанії</a>
+                <a href="#dice-roller" className="header__dropdown-link">Кидки кубиків</a>
               </div>
             )}
           </div>

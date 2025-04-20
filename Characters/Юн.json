@@ -1,0 +1,27 @@
+{
+  "id": "1743615233374",
+  "system": "dnd",
+  "version": "lunocus",
+  "sections": {
+    "General": {
+      "name": "Юн",
+      "race": "Санґв",
+      "description": "Кремезна воїтельниця. КОлишня гвадійка Ауру",
+      "level": "7"
+    },
+    "Attributes": {
+      "strength": "16",
+      "dexterity": "14",
+      "constitution": "16",
+      "intelligence": "11",
+      "wisdom": "11",
+      "charisma": "11"
+    },
+    "Inventory": {
+      "weapons": "Дворучна сокира",
+      "equipment": "Книги про зорі",
+      "money-asim": "200",
+      "money-tezar": "5060"
+    }
+  }
+}

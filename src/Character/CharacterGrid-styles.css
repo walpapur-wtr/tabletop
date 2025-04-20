@@ -1,15 +1,40 @@
+/* Сітка листів персонажів */
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Картка персонажа */
 .character-card {
-    width: 10rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    cursor: pointer;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .character-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(255, 165, 0, 0.5);
+}
+
+.character-card--empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: orange;
+    border: 1px dashed orange;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.character-card--empty:hover {
+    background-color: rgba(255, 196, 0, 0.1);
 }
 
 .character-card__image {
@@ -34,12 +59,6 @@
     color: #555;
 }
 
-.character-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    gap: 1rem;
-}
-
 .character-grid__add-card {
     display: flex;
     align-items: center;
@@ -58,15 +77,15 @@
 
 /* Адаптивність */
 @media (max-width: 768px) {
-    .character-card {
-        width: 8rem;
-    }
-
     .character-card__name {
         font-size: 1rem;
     }
 
     .character-card__info {
         font-size: 0.75rem;
+    }
+
+    .character-grid {
+        grid-template-columns: 1fr;
     }
 }

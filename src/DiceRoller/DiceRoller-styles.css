@@ -1,16 +1,93 @@
-.dice-roller {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 1rem;
-    box-sizing: border-box;
-    color: #ffa500;
+.mobile-dice-roller-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background-color: #ff8c00;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.mobile-dice-roller-popup {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
     width: 100%;
+    max-width: 500px;
+    background-color: rgba(0, 0, 0, 0.95);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: slide-in 0.3s ease-out;
+    box-sizing: border-box;
+    left: auto;
+    transform: none;
 }
 
 @media (max-width: 600px) {
-    .dice-roller {
-        padding: 0.5rem;
+    .mobile-dice-roller-popup {
+        bottom: 70px;
+        right: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        left: 50%;
+        transform: translateX(-50%);
     }
+
+    .mobile-dice-roller-icon {
+        bottom: 10px;
+        right: 10px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mobile-dice-roller-popup .close-popup {
+    position: absolute;
+    top: -1rem;
+    right: 1rem;
+    font-size: 20px;
+    color: black;
+    cursor: pointer;
+}
+
+/* Стилі для DiceRoller */
+.dice-roller {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    color: #ffa500;
+    max-width: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    color: #ffa500;
+    width: 100%;
 }
 
 .dice-roller__dice-buttons {
@@ -22,15 +99,22 @@
 }
 
 .dice-roller__dice-button {
-    flex: 1 1 calc(25% - 0.5rem);
     padding: 0.5rem;
-    font-size: 1rem;
+    background-color: #ff8c00;
+    color: white;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    flex: 1 1 calc(25% - 0.5rem);
+    font-size: 1rem;
 }
 
-@media (max-width: 400px) {
-    .dice-roller__dice-button {
-        flex: 1 1 calc(50% - 0.5rem);
+/* Адаптивність */
+
+
+@media (max-width: 600px) {
+    .dice-roller {
+        padding: 0.75rem;
     }
 }
 
@@ -49,12 +133,12 @@
 
 .dice-roller__adv-dis-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .dice-roller__modifier-buttons {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .dice-roller__modifier-button,
@@ -68,7 +152,7 @@
 
 .dice-roller__modifier-formula {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     justify-content: space-between;
     margin-top: 0.5rem;
     width: 100%;
@@ -84,15 +168,9 @@
     width: calc(20% - 0.5rem);
 }
 
-.dice-roller__actions {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+.dice-roller__roll-button {
     margin-bottom: 1rem;
     width: calc(100% - 1rem);
-}
-
-.dice-roller__roll-button {
     padding: 0.5rem;
     font-size: 1rem;
     cursor: pointer;
@@ -104,22 +182,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
-.dice-roller__last-roll-result {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: auto;
+.dice-roller__last-roll-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.dice-roller__roll-item {
+    display: flex;
+    align-items: center;
 }
 
 .dice-roller__last-roll-section {
     display: flex;
-    width: 80%;
-    justify-content: space-between;
+    width: calc(100% - 1rem);
+    gap: 2rem;
 }
 
-.dice-roller__last-roll,
+.dice-roller__last-roll-result {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: auto;
+}
+
 .dice-roller__last-roll-buttons {
     margin: auto;
     display: flex;
@@ -130,31 +220,6 @@
 .dice-roller__reroll-button,
 .dice-roller__history-button {
     padding: 0.5rem;
-    cursor: pointer;
-}
-
-.dice-roller__last-roll-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-
-.dice-roller__roll-item {
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
-
-.roll-history-popup .close-popup {
-    position: absolute;
-    top: -30px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
-    color: white;
     cursor: pointer;
 }
 

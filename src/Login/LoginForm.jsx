@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ModalMessage from './ModalMessage';  // Імпортуємо компонент для модального вікна
 
-const LoginForm = ({ toggleForm }) => {
+const LoginForm = ({ toggleForm, onLoginSuccess }) => {
   const [loginInput, setLoginInput] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');  // Для повідомлень
@@ -29,6 +29,8 @@ const LoginForm = ({ toggleForm }) => {
 
       if (response.ok) {
         setMessage('Login successful');
+        localStorage.setItem("token", result.token); // Save token
+        onLoginSuccess(result.username); // Pass the username to the parent component
       } else {
         setMessage(result.message || 'Login failed');
       }

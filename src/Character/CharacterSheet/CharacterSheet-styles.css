@@ -1,10 +1,11 @@
-.character-sheet {
+character-sheet {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 1rem auto;
     padding: 1rem;
-    border: 1px solid #ccc;
+    background-color: #333;
+    color: #ffa500;
     border-radius: 0.5rem;
-    background: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .character-sheet__image {
@@ -22,12 +23,12 @@
 
 .character-sheet__stats h2 {
     font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+    color: #ffa500;
 }
 
 .character-sheet__stats p {
     font-size: 1rem;
-    margin: 0;
+    color: #fff;
 }
 
 /* Адаптивність */
