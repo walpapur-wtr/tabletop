@@ -40,9 +40,10 @@ const RegisterForm = ({ toggleForm }) => {
   return (
     <>
       <form className="form" onSubmit={handleRegister}>
-        <h2>Register</h2>
+        <h2 className="form__title">Register</h2>
         <input
           type="email"
+          className="form__input"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -50,6 +51,7 @@ const RegisterForm = ({ toggleForm }) => {
         />
         <input
           type="text"
+          className="form__input"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -57,13 +59,14 @@ const RegisterForm = ({ toggleForm }) => {
         />
         <input
           type="password"
+          className="form__input"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Register</button>
-        <p onClick={toggleForm} className="toggle-link">
+        <button type="submit" className="form__button">Register</button>
+        <p onClick={toggleForm} className="form__toggle-link">
           Already have an account? Login here.
         </p>
       </form>

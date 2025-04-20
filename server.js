@@ -147,41 +147,32 @@ app.get("/api/characters/:name", (req, res) => {
 
 // Protected route to create a new character
 app.post("/api/characters", verifyToken, (req, res) => {
-  const { system, version, sections } = req.body;
-  const username = req.username; // Get the logged-in user's username
-  console.log("Received character creation request:", { system, version, sections, username });
+  const { system, version, sections, image } = req.body; // Include image in the request body
+  const username = req.username;
 
   if (!username) {
     return res.status(401).json({ error: "Користувач не авторизований." });
   }
 
   if (!system || !version) {
-    console.error("System or version not specified in request.");
     return res.status(400).json({ error: "Необхідно вказати систему та версію." });
   }
 
   if (!sections || !sections.General || !sections.General.name) {
-    console.error("General section or name is missing.");
     return res.status(400).json({ error: "Поле General.name є обов'язковим." });
-  }
-
-  const configFilePath = path.join(__dirname, "configs", system, `${version}.json`);
-  if (!fs.existsSync(configFilePath)) {
-    console.error(`Config file not found: ${configFilePath}`);
-    return res.status(400).json({ error: "Невідома система або версія." });
   }
 
   const newCharacter = {
     id: Date.now().toString(),
-    user: username, // Add the username to the character data
+    user: username,
     system,
     version,
     sections,
+    image: image || null, // Save the image link or null if not provided
   };
 
   const characterFilePath = path.join(charactersDir, `${sections.General.name}.json`);
   fs.writeFileSync(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8");
-  console.log("Character saved successfully:", newCharacter);
   res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
 });
 

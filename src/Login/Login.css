@@ -4,63 +4,72 @@
     flex-direction: column;
     min-height: 100vh;
     box-sizing: border-box;
-}
-
-.header {
-    width: 100%;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.footer {
-    width: 100%;
-    margin-top: auto;
+    background-color: #f5f5f5; /* Light background for contrast */
 }
 
 .form {
-    margin: auto; /* Центруємо форму */
-    width: 100%;
-    max-width: 400px;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: #333; /* Dark gray background */
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    max-width: 400px; /* Limit width */
+    width: 90%; /* Responsive width */
+    margin: auto;
+    box-sizing: border-box;
 }
 
-.form h2 {
-    margin-bottom: 1em;
-    color: #333;
-}
-
-.form input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    border: none;
+.form__title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
     color: #fff;
-    font-weight: bold;
-    border-radius: 4px;
+}
+
+.form__input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #555; /* Subtle border */
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #444; /* Slightly lighter gray */
+    color: white;
+}
+
+.form__input::placeholder {
+    color: #aaa; /* Placeholder color */
+}
+
+.form__button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #555; /* Darker button */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
     cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.form button:hover {
-    background-color: #0056b3;
+.form__button:hover {
+    background-color: #777; /* Lighter gray on hover */
+    background-color: #ffa500;
+
 }
 
-.toggle-link {
-    margin-top: 10px;
-    color: #007bff;
+.form__toggle-link {
+    margin-top: 0.5rem;
+    color: #aaa;
     cursor: pointer;
     text-align: center;
+    font-size: 0.9rem;
+    text-decoration: underline;
 }
 
 /* Modal styles */
@@ -91,18 +100,15 @@
 /* Адаптивність */
 @media (max-width: 768px) {
     .form {
-        padding: 15px;
+        padding: 1.5rem;
     }
 
-    .form h2 {
+    .form__title {
         font-size: 1.5rem;
     }
 
-    .form input {
-        font-size: 1rem;
-    }
-
-    .form button {
-        font-size: 1rem;
+    .form__input,
+    .form__button {
+        font-size: 0.9rem;
     }
 }

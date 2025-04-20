@@ -48,9 +48,10 @@ const LoginForm = ({ toggleForm, onLoginSuccess }) => {
   return (
     <>
       <form className="form" onSubmit={handleLogin}>
-        <h2>Login</h2>
+        <h2 className="form__title">Login</h2>
         <input
           type="text"
+          className="form__input"
           placeholder="Email or Username"
           value={loginInput}
           onChange={(e) => setLoginInput(e.target.value)}
@@ -58,13 +59,14 @@ const LoginForm = ({ toggleForm, onLoginSuccess }) => {
         />
         <input
           type="password"
+          className="form__input"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Login</button>
-        <p onClick={toggleForm} className="toggle-link">
+        <button type="submit" className="form__button">Login</button>
+        <p onClick={toggleForm} className="form__toggle-link">
           Don't have an account? Register here.
         </p>
       </form>

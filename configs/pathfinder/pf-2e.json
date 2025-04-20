@@ -1,23 +1,19 @@
 {
-  "name": "Pathfinder 2-th edition",
-  "author": "Someone",
+  "name": "2e",
+  "author": "Pathfinder",
   "basedOn": "Pathfinder",
   "sections": [
     {
       "name": "General",
-      "step": 1,
       "fields": [
-        { "name": "name", "label": "Ім'я", "type": "text", "required": true, "default": "NPC" },
-        { "name": "race", "label": "Раса", "type": "text", "required": true },
-        { "name": "classes", "label": "Класи", "type": "array", "required": false },
-        { "name": "background-name", "label": "Передісторія", "type": "text", "required": false },
-        { "name": "description", "label": "Опис", "type": "textarea", "required": false },
-        { "name": "level", "label": "Рівень", "type": "text", "required": true }
+        { "name": "name", "label": "Ім'я", "type": "text", "required": true, "placeholder": "Червоновус"},
+        { "name": "race", "label": "Раса", "type": "text", "required": true, "placeholder": "Гном" },
+        { "name": "description", "label": "Опис", "type": "textarea", "required": false, "placeholder": "Гном з характерними яскраво рудими вусами" },
+        { "name": "level", "label": "Рівень", "type": "text", "required": true, "placeholder": "7" }
       ]
     },
     {
       "name": "Attributes",
-      "step": 2,
       "fields": [
         { "name": "strength", "label": "Сила", "type": "number", "required": true, "rollable": true },
         { "name": "dexterity", "label": "Спритність", "type": "number", "required": true, "rollable": true },
@@ -28,25 +24,12 @@
       ]
     },
     {
-      "name": "Health and Defense",
-      "step": 3,
-      "fields": [
-        { "name": "ac", "label": "Захист", "type": "number", "required": true },
-        { "name": "hp", "label": "Здоров'я", "type": "number", "required": true },
-        { "name": "speed", "label": "Пересування", "type": "number", "required": true }
-      ]
-    },
-    {
       "name": "Inventory",
-      "step": 4,
       "fields": [
         { "name": "weapons", "label": "Зброя", "type": "array", "required": false },
         { "name": "equipment", "label": "Спорядження", "type": "array", "required": false },
-        { "name": "treasure-pp", "label": "Платинові монети", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-ep", "label": "Електричні", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-gp", "label": "Золоті", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-sp", "label": "Сріьні", "type": "number", "required": false, "default": 0 },
-        { "name": "treasure-cp", "label": "Мідні", "type": "number", "required": false, "default": 0 }
+        { "name": "money-asim", "label": "Асіми", "type": "number", "required": false, "default": 0 },
+        { "name": "money-tezar", "label": "Тезар", "type": "number", "required": false, "default": 0 }
       ]
     }
   ]

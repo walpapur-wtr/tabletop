@@ -5,10 +5,26 @@
     min-height: 100vh; 
     padding: 0;
     box-sizing: border-box; /* Контент не виходить за рамки, не з'являється скрол */
+    background: url('/src/dnd-background.jpg') center/cover no-repeat;
+    position: relative;
+    color: white;
+}
+
+.home-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    z-index: 0;
 }
 
 .home-page__content {
     flex: 1; /* Весь вміст сторінки займає все місце між хедером та футером */
+    position: relative;
+    z-index: 1;
 }
 
 .home-page__dice-roller-icon{

@@ -12,7 +12,7 @@
 }
 
 .system-modal__content {
-  background-color: #fff;
+  background-color: #333;
   padding: 20px;
   border-radius: 10px;
   width: 90%;
@@ -36,6 +36,7 @@
   padding: 10px;
   margin: 5px 0;
   background-color: #f9f9f9;
+  color: black;
   border: 1px solid #ddd;
   border-radius: 5px;
   cursor: pointer;
@@ -43,7 +44,7 @@
 }
 
 .system-modal__item:hover {
-  background-color: #f0f0f0;
+  box-shadow: 0 4px 10px rgba(255, 165, 0, 0.5);
 }
 
 .system-modal__close {
@@ -57,13 +58,14 @@
 
 .system-modal__sublist {
   list-style: none;
-  padding-left: 20px;
+  padding: 10px;
 }
 
 .system-modal__subitem {
   padding: 5px;
   margin: 5px 0;
-  background-color: #f9f9f9;
+  color: white;
+  background-color: #333;
   border: 1px solid #ddd;
   border-radius: 5px;
   cursor: pointer;
@@ -71,5 +73,6 @@
 }
 
 .system-modal__subitem:hover {
-  background-color: #f0f0f0;
+  color: black;
+  background-color: #ffa500;
 }

@@ -1,5 +1,5 @@
 {
-  "name": "DnD edition 2024",
+  "name": "2024",
   "author": "Wizards of the coast",
   "basedOn": "DnD",
   "sections": [
@@ -8,8 +8,6 @@
       "fields": [
         { "name": "name", "label": "Ім'я", "type": "text", "required": true, "placeholder": "Червоновус"},
         { "name": "race", "label": "Раса", "type": "text", "required": true, "placeholder": "Гном" },
-        { "name": "classes", "label": "Класи", "type": "array", "required": false, "placeholder": "Бард" },
-        { "name": "background-name", "label": "Передісторія", "type": "text", "required": false, "placeholder": "Мандрівник" },
         { "name": "description", "label": "Опис", "type": "textarea", "required": false, "placeholder": "Гном з характерними яскраво рудими вусами" },
         { "name": "level", "label": "Рівень", "type": "text", "required": true, "placeholder": "7" }
       ]
@@ -23,6 +21,15 @@
         { "name": "intelligence", "label": "Інтелект", "type": "number", "required": true, "rollable": true },
         { "name": "wisdom", "label": "Мудрість", "type": "number", "required": true, "rollable": true },
         { "name": "charisma", "label": "Харизма", "type": "number", "required": true, "rollable": true }
+      ]
+    },
+    {
+      "name": "Inventory",
+      "fields": [
+        { "name": "weapons", "label": "Зброя", "type": "array", "required": false },
+        { "name": "equipment", "label": "Спорядження", "type": "array", "required": false },
+        { "name": "money-asim", "label": "Асіми", "type": "number", "required": false, "default": 0 },
+        { "name": "money-tezar", "label": "Тезар", "type": "number", "required": false, "default": 0 }
       ]
     }
   ]

@@ -249,5 +249,189 @@
     ],
     "total": 14,
     "date": "2025-04-20T13:36:46.972Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 9,
+        "dice": "d20"
+      },
+      {
+        "value": 3,
+        "dice": "d8"
+      },
+      {
+        "value": 7,
+        "dice": "d10"
+      },
+      {
+        "value": 50,
+        "dice": "d100"
+      }
+    ],
+    "total": 69,
+    "date": "2025-04-20T14:44:42.636Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 18,
+        "dice": "d20"
+      },
+      {
+        "value": 7,
+        "dice": "d8"
+      },
+      {
+        "value": 7,
+        "dice": "d10"
+      },
+      {
+        "value": 2,
+        "dice": "d100"
+      }
+    ],
+    "total": 34,
+    "date": "2025-04-20T14:44:48.104Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 20,
+        "dice": "d20"
+      },
+      {
+        "value": 8,
+        "dice": "d8"
+      },
+      {
+        "value": 7,
+        "dice": "d10"
+      },
+      {
+        "value": 9,
+        "dice": "d100"
+      }
+    ],
+    "total": 44,
+    "date": "2025-04-20T14:44:49.027Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 5,
+        "dice": "d20"
+      },
+      {
+        "value": 1,
+        "dice": "d8"
+      },
+      {
+        "value": 6,
+        "dice": "d10"
+      },
+      {
+        "value": 13,
+        "dice": "d100"
+      }
+    ],
+    "total": 25,
+    "date": "2025-04-20T14:44:49.779Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 16,
+        "dice": "d20"
+      },
+      {
+        "value": 5,
+        "dice": "d8"
+      },
+      {
+        "value": 9,
+        "dice": "d10"
+      },
+      {
+        "value": 97,
+        "dice": "d100"
+      }
+    ],
+    "total": 127,
+    "date": "2025-04-20T14:44:50.399Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 1,
+        "dice": "d20"
+      },
+      {
+        "value": 6,
+        "dice": "d8"
+      },
+      {
+        "value": 7,
+        "dice": "d10"
+      },
+      {
+        "value": 5,
+        "dice": "d100"
+      }
+    ],
+    "total": 19,
+    "date": "2025-04-20T14:44:51.377Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 6,
+        "dice": "d20"
+      },
+      {
+        "value": 1,
+        "dice": "d8"
+      },
+      {
+        "value": 3,
+        "dice": "d10"
+      },
+      {
+        "value": 50,
+        "dice": "d100"
+      }
+    ],
+    "total": 60,
+    "date": "2025-04-20T14:44:52.329Z"
+  },
+  {
+    "formula": "1d20 + 1d8 + 1d10 + 1d100",
+    "rolls": [
+      {
+        "value": 6,
+        "dice": "d20"
+      },
+      {
+        "value": 4,
+        "dice": "d8"
+      },
+      {
+        "value": 3,
+        "dice": "d10"
+      },
+      {
+        "value": 79,
+        "dice": "d100"
+      }
+    ],
+    "total": 92,
+    "date": "2025-04-20T14:44:54.225Z"
   }
 ]
