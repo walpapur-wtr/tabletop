@@ -6,6 +6,7 @@ import CallOfCthulhuForm from "./CustomForm-component";
 import HeaderComponent from "../../components/Header-component";
 import FooterComponent from "../../components/Footer-component.jsx";
 import DiceRollerButton from "../../components/DiceRollerButton.jsx";
+import ModalMessage from "../../components/ModalMessage";
 import "./CreateCharacter-styles.css";
 
 const CreateCharacterPage = () => {
@@ -14,6 +15,11 @@ const CreateCharacterPage = () => {
   const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const redirectToLogin = () => {
+    window.location.href = "/login";
+  };
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -54,6 +60,13 @@ const CreateCharacterPage = () => {
   return (
     <div className="create-character-page">
       <HeaderComponent />
+      {showLoginModal && (
+        <ModalMessage
+          message="Please log in to create a character."
+          onClose={() => setShowLoginModal(false)}
+          onConfirm={redirectToLogin}
+        />
+      )}
       <FormComponent config={config} />
       <DiceRollerButton />
       <FooterComponent />

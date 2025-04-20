@@ -1,8 +1,8 @@
 .create-character-page {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
     min-height: 100vh;
     background-color: #333;
     color: #ffa500;
@@ -18,113 +18,104 @@
     width: 100%;
     max-width: 600px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .character-form h2 {
     font-size: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: #333;
 }
 
 .character-form__field {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem; /* Consistent spacing between fields */
+    width: 100%;
 }
 
-.character-form__field label {
+.character-form__label {
     display: block;
     margin-bottom: 0.5rem;
     font-size: 1rem;
     color: #ffa500;
+    text-align: left; /* Align labels to the left */
 }
 
-.character-form__input-group {
-    display: flex;
-    align-items: center;
-}
-
-.character-form__input-group input {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ffa500;
-    border-radius: 0.25rem;
-    background-color: #333;
-    color: #ffa500;
-}
-
-.character-form__field input {
+.character-form__input {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.75rem;
     border: 1px solid #ffa500;
     border-radius: 0.25rem;
     background-color: #333;
     color: #ffa500;
+    font-size: 1rem;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.modifier-input {
+    width: 80px;
+    text-align: center;
+}
+
+.roll-button {
+    padding: 0.5rem;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.roll-button:hover {
+    background-color: #ffbf47;
 }
 
 .character-form__navigation {
     display: flex;
     justify-content: space-between;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
-.dice-roll-button {
-    margin-left: 0.5rem;
-    padding: 0.5rem;
-    background-color: #ffa500;
-    color: #333;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.dice-roll-button:hover {
-    background-color: #ffbf47;
-}
-
-.navigation-button {
-    padding: 0.5rem 1rem;
-    background-color: #ffa500;
-    color: #333;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    font-size: 1rem;
-    margin: 5px
-}
-
-.navigation-button:hover {
-    background-color: #ffbf47;
-}
-
+.navigation-button,
 .save-button {
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1.5rem;
     background-color: #ffa500;
     color: #333;
     border: none;
     border-radius: 0.25rem;
     cursor: pointer;
     font-size: 1rem;
+    transition: background-color 0.3s ease;
 }
 
+.navigation-button:hover,
 .save-button:hover {
     background-color: #ffbf47;
+}
+
+.attribute-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 /* Адаптивність */
 @media (max-width: 768px) {
     .character-form {
-        padding: 15px;
+        padding: 1.5rem;
     }
 
     .character-form h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
 
-    .character-form__field input {
-        font-size: 1rem;
+    .character-form__input {
+        font-size: 0.9rem;
     }
 
-    .navigation-button {
-        font-size: 1rem;
+    .navigation-button,
+    .save-button {
+        font-size: 0.9rem;
     }
 }

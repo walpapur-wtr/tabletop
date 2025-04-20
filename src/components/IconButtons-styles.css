@@ -1,0 +1,45 @@
+.mobile-dice-roller-icon,
+.mobile-create-character-icon {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.mobile-dice-roller-icon {
+  bottom: 20px;
+  right: 20px;
+  background-color: #ff8c00;
+}
+
+.mobile-create-character-icon {
+  bottom: 90px; /* Position above the dice roller icon */
+  right: 20px;
+    background-color: #ff8c00;
+}
+
+@media (max-width: 600px) {
+  .mobile-dice-roller-icon {
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .mobile-create-character-icon {
+    bottom: 70px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+}

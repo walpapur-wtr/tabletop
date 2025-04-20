@@ -4,10 +4,12 @@ import HeaderComponent from "../components/Header-component";
 import FooterComponent from "../components/Footer-component";
 import DiceRollerButton from "../components/DiceRollerButton";
 import CharacterCard from "../Character/CharacterCard-component";
+import SystemModal from "../Character/CreateCharacter/SystemModal-component";
 import "../styles/Home-styles.css";
 
 const MyProfilePage = () => {
   const [characters, setCharacters] = useState([]);
+  const [isSystemModalVisible, setIsSystemModalVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,11 @@ const MyProfilePage = () => {
       .catch((err) => console.error("Error fetching characters:", err));
   }, [navigate]);
 
+  const handleSystemSelect = (system, version) => {
+    setIsSystemModalVisible(false);
+    navigate(`/create-character/${system}/${version}`);
+  };
+
   return (
     <div className="home-page">
       <HeaderComponent />
@@ -47,8 +54,15 @@ const MyProfilePage = () => {
           {characters.map((character) => (
             <CharacterCard key={character.id} character={character} />
           ))}
+          <CharacterCard onAddClick={() => setIsSystemModalVisible(true)} />
         </div>
       </div>
+      {isSystemModalVisible && (
+        <SystemModal
+          onClose={() => setIsSystemModalVisible(false)}
+          onSystemSelect={handleSystemSelect}
+        />
+      )}
       <DiceRollerButton />
       <FooterComponent />
     </div>

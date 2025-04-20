@@ -116,6 +116,19 @@ if (!fs.existsSync(charactersDir)) {
 
 // Public route to get all characters
 app.get("/api/characters", (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  let username = null;
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY);
+      username = decoded.username;
+    } catch (err) {
+      console.error("Invalid token:", err);
+      return res.status(401).json({ error: "Invalid token" });
+    }
+  }
+
   fs.readdir(charactersDir, (err, files) => {
     if (err) {
       return res.status(500).json({ error: "Помилка читання директорії." });
@@ -123,9 +136,12 @@ app.get("/api/characters", (req, res) => {
 
     const characters = files.map((file) => {
       const filePath = path.join(charactersDir, file);
-      const characterData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-      return characterData;
+      return JSON.parse(fs.readFileSync(filePath, "utf-8"));
     });
+
+    if (username) {
+      return res.status(200).json(characters.filter((char) => char.user === username));
+    }
 
     res.status(200).json(characters);
   });

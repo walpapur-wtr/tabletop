@@ -15,12 +15,12 @@
     {
       "name": "Attributes",
       "fields": [
-        { "name": "strength", "label": "Сила", "type": "number", "required": true, "rollable": true },
-        { "name": "dexterity", "label": "Спритність", "type": "number", "required": true, "rollable": true },
-        { "name": "constitution", "label": "Тілобудова", "type": "number", "required": true, "rollable": true },
-        { "name": "intelligence", "label": "Інтелект", "type": "number", "required": true, "rollable": true },
-        { "name": "wisdom", "label": "Мудрість", "type": "number", "required": true, "rollable": true },
-        { "name": "charisma", "label": "Харизма", "type": "number", "required": true, "rollable": true }
+        { "name": "strength", "label": "Сила", "type": "number", "required": true, "rollable": true, "formula": "4d6" },
+        { "name": "dexterity", "label": "Спритність", "type": "number", "required": true, "rollable": true, "formula": "4d6" },
+        { "name": "constitution", "label": "Тілобудова", "type": "number", "required": true, "rollable": true, "formula": "4d6" },
+        { "name": "intelligence", "label": "Інтелект", "type": "number", "required": true, "rollable": true, "formula": "4d6" },
+        { "name": "wisdom", "label": "Мудрість", "type": "number", "required": true, "rollable": true, "formula": "4d6" },
+        { "name": "charisma", "label": "Харизма", "type": "number", "required": true, "rollable": true, "formula": "4d6" }
       ]
     },
     {
