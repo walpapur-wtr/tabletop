@@ -17,28 +17,43 @@ app.use(bodyParser.json());
 const charactersDir = path.join(__dirname, "Characters");
 const dataFilePath = path.join(__dirname, "RollData.json");
 
-// MySQL Database connection
-const db = mysql.createConnection({
+// MySQL Database connection with auto-reconnect
+let connection;
+
+function handleDisconnect() {
+  connection = mysql.createConnection({
     host: 'vz536877.mysql.tools', // replace with your database host
     user: 'vz536877_tabletoplogin', // replace with your database username
     password: 'HcE856-a;f', // replace with your database password
     database: 'vz536877_tabletoplogin', // replace with your database name
-});
+  });
 
-db.connect((err) => {
+  connection.connect((err) => {
     if (err) {
-        console.error('Failed to connect to database:', err);
-        process.exit(1); // Завершити програму, якщо підключення не вдалося
+      console.error('Помилка підключення до MySQL:', err);
+      setTimeout(handleDisconnect, 2000); // Перепідключення через 2 секунди
     } else {
-        console.log('Connected to MySQL database');
+      console.log('Connected to MySQL database');
     }
-});
+  });
+
+  connection.on('error', (err) => {
+    console.error('Помилка SQL-запиту:', err);
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      handleDisconnect(); // Перепідключення при втраті з'єднання
+    } else {
+      throw err;
+    }
+  });
+}
+
+handleDisconnect();
 
 // Middleware to verify token and extract username for protected routes
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
+  const token = authHeader ? authHeader.split(" ")[1] : null;
+  if (token) {
     jwt.verify(token, SECRET_KEY, (err, user) => {
       if (err) {
         console.error("Invalid or expired token:", err.message);
@@ -58,7 +73,7 @@ app.post('/api/register', (req, res) => {
     const { username, email, password } = req.body;
     const sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
 
-    db.query(sql, [username, email, password], (err, results) => {
+    connection.query(sql, [username, email, password], (err, results) => {
         if (err) {
             console.error('Помилка SQL-запиту:', err); // Додане логування помилки
             return res.status(500).json({ message: 'Помилка реєстрації', error: err });
@@ -93,7 +108,7 @@ app.post('/api/login', (req, res) => {
         return res.status(400).json({ message: 'Email або Username обов\'язкові для входу' });
     }
 
-    db.query(sql, params, (err, results) => {
+    connection.query(sql, params, (err, results) => {
         if (err) {
             console.error('Помилка SQL-запиту:', err);
             return res.status(500).json({ message: 'Login failed' });
@@ -116,7 +131,8 @@ if (!fs.existsSync(charactersDir)) {
 
 // Public route to get all characters
 app.get("/api/characters", (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const authHeader = req.headers.authorization;
+  const token = authHeader ? authHeader.split(" ")[1] : null;
   let username = null;
 
   if (token) {
@@ -275,6 +291,24 @@ app.get("/api/configs", (req, res) => {
 
     res.status(200).json(systems);
   });
+});
+
+// Endpoint to get server time
+app.get('/api/server-time', (req, res) => {
+  res.json({ serverTime: new Date().toISOString() });
+});
+
+// Endpoint to refresh token
+app.post('/api/refresh-token', verifyToken, (req, res) => {
+  const username = req.username;
+
+  if (!username) {
+    return res.status(401).json({ message: "Користувач не авторизований." });
+  }
+
+  // Generate a new token
+  const newToken = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
+  res.json({ message: "Токен оновлено.", token: newToken });
 });
 
 // Обробка всіх інших маршрутів (для React Router)

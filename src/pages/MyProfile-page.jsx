@@ -5,6 +5,7 @@ import FooterComponent from "../components/Footer-component";
 import DiceRollerButton from "../components/DiceRollerButton";
 import CharacterCard from "../Character/CharacterCard-component";
 import SystemModal from "../Character/CreateCharacter/SystemModal-component";
+import UserProfile from "../components/UserProfile-component"; // Імпортуємо компонент профілю
 import "../styles/Home-styles.css";
 
 const MyProfilePage = () => {
@@ -46,9 +47,16 @@ const MyProfilePage = () => {
     navigate(`/create-character/${system}/${version}`);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Remove token
+    localStorage.removeItem("username"); // Remove username
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <div className="home-page">
       <HeaderComponent />
+      <UserProfile onLogout={handleLogout} /> {/* Додаємо компонент профілю */}
       <div className="home-page__content">
         <div className="character-grid">
           {characters.map((character) => (
