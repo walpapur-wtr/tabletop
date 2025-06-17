@@ -27,10 +27,12 @@ const LoginForm = ({ toggleForm, onLoginSuccess }) => {
 
       const result = await response.json();
 
-      if (response.ok) {
+      if (response.ok && result.success) {
         setMessage('Login successful');
-        localStorage.setItem("token", result.token); // Save token
-        onLoginSuccess(result.username); // Pass the username to the parent component
+        localStorage.setItem("token", result.token);
+        localStorage.setItem("username", result.username);
+        localStorage.setItem("email", result.email);
+        onLoginSuccess(result.username);
       } else {
         setMessage(result.message || 'Login failed');
       }

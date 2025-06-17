@@ -1,0 +1,31 @@
+{
+  "sections": {
+    "General": {
+      "name": "Червоновус",
+      "race": "Гном",
+      "description": "Молодий , на диво високий гном з закрученими червоними вусами. Носит губну гармошку на срібному ланцюжку",
+      "level": "6"
+    },
+    "Attributes": {
+      "strength": 8,
+      "strength-modifier": -1,
+      "dexterity": 12,
+      "dexterity-modifier": 1,
+      "constitution": 9,
+      "constitution-modifier": -1,
+      "intelligence": 8,
+      "intelligence-modifier": -1,
+      "wisdom": 12,
+      "wisdom-modifier": 1,
+      "charisma": 15,
+      "charisma-modifier": 2
+    },
+    "Inventory": {
+      "weapons": "Кинжал",
+      "equipment": "Гармошка, записник",
+      "money-asim": "45"
+    }
+  },
+  "system": "dnd",
+  "version": "lunocus"
+}

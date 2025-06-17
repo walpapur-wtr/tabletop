@@ -1,11 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.9b46e39c.css",
-    "main.js": "/static/js/main.6a4c8fb2.js",
-    "static/js/317.88b4da36.chunk.js": "/static/js/317.88b4da36.chunk.js",
-    "static/js/991.9d63d05c.chunk.js": "/static/js/991.9d63d05c.chunk.js",
-    "static/js/554.e0e3d79d.chunk.js": "/static/js/554.e0e3d79d.chunk.js",
-    "static/js/162.efadd02e.chunk.js": "/static/js/162.efadd02e.chunk.js",
+    "main.css": "/static/css/main.a411f4b8.css",
+    "main.js": "/static/js/main.366c089f.js",
     "static/media/dnd-background.jpg": "/static/media/dnd-background.bac99ad91c05b98682ce.jpg",
     "static/media/dice-b16-d20.svg": "/static/media/dice-b16-d20.853194a1e17e9e05b802ad53a4352d27.svg",
     "static/media/dice-o32-d20.svg": "/static/media/dice-o32-d20.e62b3dc23b54dcfa5546a1253d5e359c.svg",
@@ -20,11 +16,11 @@
     "static/media/dice-b16-d4.svg": "/static/media/dice-b16-d4.8841094385a6401c6a0f879376d62dba.svg",
     "static/media/dice-o32-d4.svg": "/static/media/dice-o32-d4.216ef3b8fc793ae14ddad00f03bfe5cc.svg",
     "index.html": "/index.html",
-    "main.9b46e39c.css.map": "/static/css/main.9b46e39c.css.map",
-    "main.6a4c8fb2.js.map": "/static/js/main.6a4c8fb2.js.map"
+    "main.a411f4b8.css.map": "/static/css/main.a411f4b8.css.map",
+    "main.366c089f.js.map": "/static/js/main.366c089f.js.map"
   },
   "entrypoints": [
-    "static/css/main.9b46e39c.css",
-    "static/js/main.6a4c8fb2.js"
+    "static/css/main.a411f4b8.css",
+    "static/js/main.366c089f.js"
   ]
 }

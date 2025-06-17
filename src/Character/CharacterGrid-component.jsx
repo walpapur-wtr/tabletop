@@ -1,58 +1,79 @@
-import React, { useState, useEffect } from "react";
-import { CharacterCard } from "./CharacterCard-component";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CharacterCard from "./CharacterCard-component";
 import "./CharacterGrid-styles.css";
-import SystemModal from "./CreateCharacter/SystemModal-component";
 
-export const CharacterGrid = () => {
+const CharacterGrid = () => {
   const [characters, setCharacters] = useState([]);
-  const [isSystemModalVisible, setIsSystemModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const token = localStorage.getItem("token");
     if (!token) {
-      console.error("Token not found. Please log in again.");
+      navigate("/login");
       return;
     }
 
-    fetch("/api/characters", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // Include token in the header
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
+    const fetchCharacters = async () => {
+      try {
+        const response = await fetch("/api/characters", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 401 || response.status === 403) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            navigate("/login");
+            return;
+          }
           throw new Error("Failed to fetch characters");
         }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Characters loaded:", data);
-        setCharacters(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
 
-  const handleSystemSelect = (system, version) => {
-    setIsSystemModalVisible(false);
-    console.log(`Navigating to create-character/${system}/${version}`);
-    navigate(`/create-character/${system}/${version}`);
+        const data = await response.json();
+        setCharacters(data.characters || []);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCharacters();
+  }, [navigate]);
+
+  const handleCreateCharacter = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else {
+      navigate("/create-character");
+    }
   };
 
+  if (loading) return <div>Loading characters...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <div className="character-grid">
-      {characters.map((character) => (
-        <CharacterCard key={character.id} character={character} />
-      ))}
-      <CharacterCard onAddClick={() => setIsSystemModalVisible(true)} />
-      {isSystemModalVisible && (
-        <SystemModal
-          onClose={() => setIsSystemModalVisible(false)}
-          onSystemSelect={handleSystemSelect}
-        />
-      )}
+    <div className="character-grid-container">
+      <div className="character-grid">
+        {characters.map((character, index) => (
+          <CharacterCard key={index} character={character} />
+        ))}
+        <div
+          className="character-card create-character"
+          onClick={handleCreateCharacter}
+        >
+          <div className="create-character-content">
+            <span className="plus-icon">+</span>
+            <p>Create New Character</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

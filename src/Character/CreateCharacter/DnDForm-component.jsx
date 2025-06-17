@@ -64,34 +64,40 @@ const DnDForm = ({ config }) => {
 
   const saveCharacter = async (data) => {
     try {
-      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error("Token not found. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      // Validate required fields
+      if (!data.sections?.General?.name) {
+        throw new Error("Character name is required");
       }
 
       const response = await fetch("/api/characters", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Include token in the header
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(data),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to save character: ${response.statusText}`);
-      }
-
       const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to save character");
+      }
+      
       console.log("Character saved successfully:", result);
     } catch (err) {
       console.error("Error saving character:", err);
     }
   };
 
-  const handleNextStep = async () => {
+  const handleNextStep = () => {
     if (currentStep < config.sections.length - 1) {
-      await saveCharacter({ ...formData, system: config.system, version: config.version }); // Додаємо system і version
       setCurrentStep((prev) => prev + 1);
     }
   };

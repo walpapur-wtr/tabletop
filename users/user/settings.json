@@ -1,0 +1,24 @@
+{
+  "theme": "light",
+  "language": "uk",
+  "notifications": true,
+  "diceRoller": {
+    "sound": true,
+    "animation": true,
+    "lastUsedDice": "d20"
+  },
+  "interface": {
+    "fontSize": "medium",
+    "contrast": "normal",
+    "compactMode": false
+  },
+  "gameSystem": {
+    "default": "lunocus",
+    "customRules": {}
+  },
+  "display": {
+    "showToolTips": true,
+    "showHotkeys": true
+  },
+  "lastAccess": "2025-06-17T09:51:03.133Z"
+}

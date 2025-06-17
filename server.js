@@ -1,366 +1,788 @@
 const express = require("express");
-const fs = require("fs");
+const fs = require("fs").promises;
+const fsSync = require("fs");  // Для синхронних операцій
 const path = require("path");
 const bodyParser = require("body-parser");
 const mysql = require('mysql2');
-const jwt = require("jsonwebtoken"); // Add this line
-const SECRET_KEY = "your_secret_key"; // Replace with a secure key
+const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+
+const SECRET_KEY = process.env.JWT_SECRET || "your_secret_key";
+const SALT_ROUNDS = 10;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "127.1.3.170";
 
-app.use(express.static(path.join(__dirname, "build")));
-app.use(express.json());
-app.use(bodyParser.json());
+// Database configuration
+const dbConfig = {
+    host: 'vz536877.mysql.tools',  // Замініть на ваш хост
+    user: 'vz536877_tabletoplogin',           // Замініть на вашого користувача
+    password: 'HcE856-a;f',              // Замініть на ваш пароль
+    database: 'vz536877_tabletoplogin'        // Замініть на вашу базу даних
+};
 
-const charactersDir = path.join(__dirname, "Characters");
-const dataFilePath = path.join(__dirname, "RollData.json");
-
-// MySQL Database connection with auto-reconnect
+// Create MySQL connection with auto-reconnect
 let connection;
 
 function handleDisconnect() {
-  connection = mysql.createConnection({
-    host: 'vz536877.mysql.tools', // replace with your database host
-    user: 'vz536877_tabletoplogin', // replace with your database username
-    password: 'HcE856-a;f', // replace with your database password
-    database: 'vz536877_tabletoplogin', // replace with your database name
-  });
+    connection = mysql.createConnection(dbConfig);
+    connection.connect(err => {
+        if (err) {
+            console.error('Error connecting to database:', err);
+            setTimeout(handleDisconnect, 2000);
+        } else {
+            console.log('Connected to database successfully');
+        }
+    });
 
-  connection.connect((err) => {
-    if (err) {
-      console.error('Помилка підключення до MySQL:', err);
-      setTimeout(handleDisconnect, 2000); // Перепідключення через 2 секунди
-    } else {
-      console.log('Connected to MySQL database');
-    }
-  });
-
-  connection.on('error', (err) => {
-    console.error('Помилка SQL-запиту:', err);
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-      handleDisconnect(); // Перепідключення при втраті з'єднання
-    } else {
-      throw err;
-    }
-  });
+    connection.on('error', err => {
+        console.error('Database error:', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST' || 
+            err.code === 'ECONNREFUSED' || 
+            err.code === 'ETIMEDOUT') {
+            console.log('Trying to reconnect to database...');
+            setTimeout(handleDisconnect, 2000);
+        } else {
+            console.error('Unhandled database error:', err);
+            // Не кидаємо помилку, щоб сервер продовжував працювати
+        }
+    });
 }
 
 handleDisconnect();
 
-// Middleware to verify token and extract username for protected routes
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+        return next();
+    }
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+app.use(express.json());
+app.use(bodyParser.json());
+
+// Directory constants
+const USERS_DIR = path.join(__dirname, "users");
+
+// Ensure base directories exist
+(async () => {
+    try {
+        await fs.mkdir(USERS_DIR, { recursive: true });
+    } catch (error) {
+        console.error('Error creating base directory:', error);
+    }
+})();
+
+// Middleware to verify token
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader ? authHeader.split(" ")[1] : null;
-  if (token) {
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-      if (err) {
-        console.error("Invalid or expired token:", err.message);
-        return res.status(403).json({ message: "Invalid or expired token" });
-      }
-      req.username = user.username; // Attach username to the request
-      next();
-    });
-  } else {
-    console.warn("Authorization header missing");
-    return res.status(401).json({ message: "Authorization header missing" });
-  }
+    const authHeader = req.headers.authorization;
+    const token = authHeader ? authHeader.split(" ")[1] : null;
+    
+    if (!token) {
+        return res.status(401).json({ 
+            success: false, 
+            message: "Authorization header missing" 
+        });
+    }
+    
+    try {
+        const user = jwt.verify(token, SECRET_KEY);
+        req.user = user; // Store the entire user object
+        next();
+    } catch (err) {
+        console.error("Token verification failed:", err.message);
+        return res.status(403).json({ 
+            success: false, 
+            message: "Invalid or expired token",
+            details: err.message 
+        });
+    }
+    }
+
+// Функція для створення стандартних налаштувань користувача
+const defaultUserSettings = {
+    theme: 'light',
+    language: 'uk',
+    notifications: true,
+    diceRoller: {
+        sound: true,
+        animation: true,
+        lastUsedDice: 'd20'
+    },
+    interface: {
+        fontSize: 'medium',
+        contrast: 'normal',
+        compactMode: false
+    },
+    gameSystem: {
+        default: 'dnd5e',
+        customRules: {}
+    },
+    display: {
+        showToolTips: true,
+        showHotkeys: true
+    },
+    lastAccess: new Date().toISOString()
 };
 
+// Endpoint для отримання налаштувань користувача
+app.get('/api/user/settings', verifyToken, async (req, res) => {
+    try {
+        const userSettingsPath = path.join(USERS_DIR, req.username, 'settings.json');
+        
+        let settings;
+        try {
+            const data = await fs.readFile(userSettingsPath, 'utf-8');
+            settings = JSON.parse(data);
+        } catch (error) {
+            // Якщо файл не існує або пошкоджений, створюємо новий з дефолтними налаштуваннями
+            settings = defaultUserSettings;
+            await fs.writeFile(userSettingsPath, JSON.stringify(settings, null, 2));
+        }
+        
+        res.json(settings);
+    } catch (error) {
+        console.error('Error reading user settings:', error);
+        res.status(500).json({ message: 'Error reading user settings' });
+    }
+});
+
+// Endpoint для оновлення налаштувань користувача
+app.patch('/api/user/settings', verifyToken, async (req, res) => {
+    try {
+        const userSettingsPath = path.join(USERS_DIR, req.username, 'settings.json');
+        const updates = req.body;
+        
+        // Отримуємо поточні налаштування
+        let currentSettings;
+        try {
+            const data = await fs.readFile(userSettingsPath, 'utf-8');
+            currentSettings = JSON.parse(data);
+        } catch (error) {
+            currentSettings = defaultUserSettings;
+        }
+        
+        // Оновлюємо налаштування (глибоке об'єднання)
+        const updatedSettings = deepMerge(currentSettings, updates);
+        updatedSettings.lastAccess = new Date().toISOString();
+        
+        // Зберігаємо оновлені налаштування
+        await fs.writeFile(userSettingsPath, JSON.stringify(updatedSettings, null, 2));
+        
+        res.json(updatedSettings);
+    } catch (error) {
+        console.error('Error updating user settings:', error);
+        res.status(500).json({ message: 'Error updating user settings' });
+    }
+});
+
+// Функція для глибокого об'єднання об'єктів
+function deepMerge(target, source) {
+    const result = { ...target };
+    
+    for (const key in source) {
+        if (source[key] instanceof Object && key in target) {
+            result[key] = deepMerge(target[key], source[key]);
+        } else {
+            result[key] = source[key];
+        }
+    }
+    
+    return result;
+}
+
 // Registration endpoint
-app.post('/api/register', (req, res) => {
-    const { username, email, password } = req.body;
-    const sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+app.post('/api/register', async (req, res) => {
+    try {
+        const { username, email, password } = req.body;
 
-    connection.query(sql, [username, email, password], (err, results) => {
-        if (err) {
-            console.error('Помилка SQL-запиту:', err); // Додане логування помилки
-            return res.status(500).json({ message: 'Помилка реєстрації', error: err });
-        }
-        console.log('Результати SQL-запиту:', results); // Логування результату для перевірки
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
-        // Create a directory for the user
-        const userDir = path.join(__dirname, "users", username);
-        if (!fs.existsSync(userDir)) {
-            fs.mkdirSync(userDir, { recursive: true });
-            console.log(`Директорія для користувача ${username} створена.`);
-        }
+        // Check if user exists
+        connection.query('SELECT * FROM users WHERE username = ? OR email = ?', [username, email], async (err, results) => {
+            if (err) {
+                console.error('Database error:', err);
+                return res.status(500).json({ message: 'Registration error' });
+            }
 
-        res.status(201).json({ message: 'Користувач успішно зареєстрований' });
-    });
+            if (results.length > 0) {
+                return res.status(409).json({ message: 'Username or email already exists' });
+            }
+
+            // Create user in database
+            connection.query('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', 
+                [username, email, hashedPassword], 
+                async (err, results) => {
+                    if (err) {
+                        console.error('Database error:', err);
+                        return res.status(500).json({ message: 'Registration error' });
+                    }
+
+                    try {
+                        // Create user directories
+                        const userDir = path.join(USERS_DIR, username);
+                        const charactersDir = path.join(userDir, "characters");
+                        
+                        await fs.mkdir(userDir, { recursive: true });
+                        await fs.mkdir(charactersDir, { recursive: true });
+                        
+                        // Create initial roll history file
+                        await fs.writeFile(
+                            path.join(userDir, 'roll_history.json'),
+                            JSON.stringify({ rolls: [] }, null, 2)
+                        );
+
+                        // Copy template files if they exist
+                        const templateDir = path.join(__dirname, "Characters");
+                        try {
+                            await fs.access(templateDir);
+                            await fs.copyFile(
+                                path.join(templateDir, "Modifiers.json"),
+                                path.join(charactersDir, "Modifiers.json")
+                            );
+                            await fs.copyFile(
+                                path.join(templateDir, "Styles.json"),
+                                path.join(charactersDir, "Styles.json")
+                            );
+                        } catch (error) {
+                            console.log('Template directory or files not found, skipping...');
+                        }
+
+                        // Створюємо файл налаштувань
+                        const settingsPath = path.join(userDir, 'settings.json');
+                        await fs.writeFile(settingsPath, JSON.stringify(defaultUserSettings, null, 2));
+
+                        res.status(201).json({ message: 'User registered successfully' });
+                    } catch (error) {
+                        console.error('Error creating user directories:', error);
+                        res.status(500).json({ message: 'Error creating user directories' });
+                    }
+                }
+            );
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Registration failed' });
+    }
 });
 
 // Login endpoint
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
     const { email, username, password } = req.body;
 
-    let sql;
-    let params;
-
+    let sql, params;
     if (email) {
-        sql = 'SELECT * FROM users WHERE email = ? AND password = ?';
-        params = [email, password];
+        sql = 'SELECT * FROM users WHERE email = ?';
+        params = [email];
     } else if (username) {
-        sql = 'SELECT * FROM users WHERE username = ? AND password = ?';
-        params = [username, password];
+        sql = 'SELECT * FROM users WHERE username = ?';
+        params = [username];
     } else {
-        return res.status(400).json({ message: 'Email або Username обов\'язкові для входу' });
+        return res.status(400).json({ 
+            success: false, 
+            message: 'Email or Username required' 
+        });
     }
-
-    connection.query(sql, params, (err, results) => {
-        if (err) {
-            console.error('Помилка SQL-запиту:', err);
-            return res.status(500).json({ message: 'Login failed' });
-        }
-
-        if (results.length > 0) {
-            const user = results[0];
-            const token = jwt.sign({ username: user.username }, SECRET_KEY, { expiresIn: "1h" }); // Generate token
-            res.json({ message: 'Login successful', token, username: user.username });
-        } else {
-            res.status(401).json({ message: 'Invalid email/username or password' });
-        }
-    });
-});
-
-// Перевіряємо, чи існує директорія для персонажів, і створюємо її, якщо її немає
-if (!fs.existsSync(charactersDir)) {
-  fs.mkdirSync(charactersDir);
-}
-
-// Public route to get all characters
-app.get("/api/characters", (req, res) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader ? authHeader.split(" ")[1] : null;
-  let username = null;
-
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, SECRET_KEY);
-      username = decoded.username;
-    } catch (err) {
-      console.error("Invalid token:", err);
-      return res.status(401).json({ error: "Invalid token" });
-    }
-  }
-
-  fs.readdir(charactersDir, (err, files) => {
-    if (err) {
-      return res.status(500).json({ error: "Помилка читання директорії." });
-    }
-
-    const characters = files.map((file) => {
-      const filePath = path.join(charactersDir, file);
-      return JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    });
-
-    if (username) {
-      return res.status(200).json(characters.filter((char) => char.user === username));
-    }
-
-    res.status(200).json(characters);
-  });
-});
-
-// Public route to get a character by name
-app.get("/api/characters/:name", (req, res) => {
-  const characterName = decodeURIComponent(req.params.name);
-  const characterFile = path.join(charactersDir, `${characterName}.json`);
-
-  if (!fs.existsSync(characterFile)) {
-    console.error(`Character not found: ${characterName}`);
-    return res.status(404).json({ error: "Персонажа не знайдено." });
-  }
-
-  const characterData = JSON.parse(fs.readFileSync(characterFile, "utf-8"));
-  res.status(200).json(characterData);
-});
-
-// Protected route to create a new character
-app.post("/api/characters", verifyToken, (req, res) => {
-  const { system, version, sections, image } = req.body; // Include image in the request body
-  const username = req.username;
-
-  if (!username) {
-    return res.status(401).json({ error: "Користувач не авторизований." });
-  }
-
-  if (!system || !version) {
-    return res.status(400).json({ error: "Необхідно вказати систему та версію." });
-  }
-
-  if (!sections || !sections.General || !sections.General.name) {
-    return res.status(400).json({ error: "Поле General.name є обов'язковим." });
-  }
-
-  const newCharacter = {
-    id: Date.now().toString(),
-    user: username,
-    system,
-    version,
-    sections,
-    image: image || null, // Save the image link or null if not provided
-  };
-
-  const characterFilePath = path.join(charactersDir, `${sections.General.name}.json`);
-  fs.writeFileSync(characterFilePath, JSON.stringify(newCharacter, null, 2), "utf-8");
-  res.status(201).json({ message: "Персонаж створено.", character: newCharacter });
-});
-
-// Protected route to update a character
-app.put("/api/characters/:name", verifyToken, (req, res) => {
-  const characterName = decodeURIComponent(req.params.name);
-  const characterFile = path.join(charactersDir, `${characterName}.json`);
-
-  if (!fs.existsSync(characterFile)) {
-    console.error(`Character not found: ${characterName}`);
-    return res.status(404).json({ error: "Персонажа не знайдено." });
-  }
-
-  const { sections } = req.body;
-  const characterData = JSON.parse(fs.readFileSync(characterFile, "utf-8"));
-
-  characterData.sections = { ...characterData.sections, ...sections };
-
-  fs.writeFileSync(characterFile, JSON.stringify(characterData, null, 2), "utf-8");
-  console.log("Character updated successfully:", characterData);
-  res.status(200).json({ message: "Персонаж оновлено.", character: characterData });
-});
-
-// Serve configuration files
-app.get("/configs/:system.json", (req, res) => {
-  const configFilePath = path.join(__dirname, "configs", `${req.params.system}.json`);
-  console.log("Requested config file path:", configFilePath);
-
-  if (!fs.existsSync(configFilePath)) {
-    console.error("Configuration file not found:", configFilePath);
-    return res.status(404).send("Configuration file not found");
-  }
-
-  console.log("Configuration file found:", configFilePath);
-  res.sendFile(configFilePath);
-});
-
-app.get("/api/systems/:system/:version", (req, res) => {
-  const { system, version } = req.params;
-  const configPath = path.join(__dirname, "configs", system, `${version}.json`);
-
-  console.log("Requested system:", system);
-  console.log("Requested version:", version);
-  console.log("Config file path:", configPath);
-
-  if (!fs.existsSync(configPath)) {
-    console.error("Configuration file not found:", configPath);
-    return res.status(404).json({ error: "Configuration file not found" });
-  }
-
-  const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-  res.json(config);
-});
-
-// Endpoint to fetch configuration files with metadata
-app.get("/api/configs", (req, res) => {
-  const configsDir = path.join(__dirname, "configs");
-
-  fs.readdir(configsDir, { withFileTypes: true }, (err, folders) => {
-    if (err) {
-      return res.status(500).json({ error: "Помилка читання директорії конфігурацій." });
-    }
-
-    const systems = folders
-      .filter((folder) => folder.isDirectory()) // Перевіряємо, чи це папка
-      .map((folder) => {
-        const systemPath = path.join(configsDir, folder.name);
-        const files = fs.readdirSync(systemPath).filter((file) => file.endsWith(".json"));
-
-        return {
-          system: folder.name,
-          configs: files.map((file) => {
-            const filePath = path.join(systemPath, file);
-            const configData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-            return {
-              filename: file,
-              name: configData.name || "Unknown",
-              author: configData.author || "Unknown",
-              basedOn: configData.basedOn || "Custom",
-            };
-          }),
-        };
-      });
-
-    res.status(200).json(systems);
-  });
-});
-
-// Endpoint to get server time
-app.get('/api/server-time', (req, res) => {
-  res.json({ serverTime: new Date().toISOString() });
-});
-
-// Endpoint to refresh token
-app.post('/api/refresh-token', verifyToken, (req, res) => {
-  const username = req.username;
-
-  if (!username) {
-    return res.status(401).json({ message: "Користувач не авторизований." });
-  }
-
-  // Generate a new token
-  const newToken = jwt.sign({ username }, SECRET_KEY, { expiresIn: "1h" });
-  res.json({ message: "Токен оновлено.", token: newToken });
-});
-
-// Обробка всіх інших маршрутів (для React Router)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
-// Маршрут для прийому даних
-app.post("/rolls", (req, res) => {
-  const { formula, rolls, total } = req.body;
-
-  if (!formula || !Array.isArray(rolls) || total === undefined) {
-    return res.status(400).json({ error: "Неправильний формат даних." });
-  }
-
-  const newRoll = {
-    formula,
-    rolls,
-    total,
-    date: new Date().toISOString(),
-  };
-
-  // Читаємо поточні дані з файлу
-  fs.readFile(dataFilePath, "utf-8", (err, data) => {
-    if (err && err.code !== 'ENOENT') {
-      return res.status(500).json({ error: "Помилка читання файлу." });
-    }
-
-    let rollData = [];
 
     try {
-      rollData = data ? JSON.parse(data) : [];
-    } catch (parseError) {
-      return res.status(500).json({ error: "Помилка парсингу файлу." });
+        const results = await new Promise((resolve, reject) => {
+            connection.query(sql, params, (err, results) => {
+                if (err) reject(err);
+                else resolve(results);
+            });
+        });
+
+        if (!results || results.length === 0) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'User not found' 
+            });
+        }
+
+        const userData = results[0];
+        const validPassword = await bcrypt.compare(password, userData.password);
+        
+        if (!validPassword) {
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Invalid password' 
+            });
+        }
+
+        const authToken = jwt.sign({ 
+            username: userData.username,
+            email: userData.email,
+            userId: userData.id
+        }, SECRET_KEY, { 
+            expiresIn: "24h" 
+        });
+
+        console.log('User logged in:', { 
+            username: userData.username, 
+            email: userData.email 
+        });
+
+        res.json({
+            success: true,
+            message: 'Login successful',
+            token: authToken,
+            username: userData.username,
+            email: userData.email
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Login failed',
+            details: error.message 
+        });
     }
+});
 
-    // Додаємо новий кидок
-    rollData.push(newRoll);
+// Get all characters for user
+app.get('/api/characters', verifyToken, async (req, res) => {
+    try {
+        if (!req.user?.username) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated properly'
+            });
+        }
 
-    // Записуємо оновлені дані в файл
-    fs.writeFile(dataFilePath, JSON.stringify(rollData, null, 2), "utf-8", (writeErr) => {
-      if (writeErr) {
-        return res.status(500).json({ error: "Помилка запису у файл." });
-      }
+        console.log('Fetching characters for user:', req.user.username);
+        const userCharactersDir = path.join(__dirname, 'users', req.user.username, "characters");
+        console.log('Looking in directory:', userCharactersDir);
+        
+        // Check if directory exists
+        if (!fsSync.existsSync(userCharactersDir)) {
+            console.log('No characters directory found, returning empty list');
+            return res.json({ 
+                success: true, 
+                characters: [] 
+            });
+        }
+
+        // Read directory contents
+        const files = await fs.readdir(userCharactersDir);
+        console.log('Found files:', files);
+        
+        // Process each character file
+        const characters = await Promise.all(
+            files
+                .filter(file => file.endsWith('.json') && !['Modifiers.json', 'Styles.json'].includes(file))
+                .map(async file => {
+                    try {
+                        const data = await fs.readFile(path.join(userCharactersDir, file), 'utf8');
+                        return JSON.parse(data);
+                    } catch (error) {
+                        console.error('Error reading character file:', file, error);
+                        return null;
+                    }
+                })
+        );
+        
+        // Filter out any failed reads
+        const validCharacters = characters.filter(char => char !== null);
+        console.log('Successfully loaded characters:', validCharacters.length);
+        
+        res.json({ 
+            success: true, 
+            characters: validCharacters 
+        });
+    } catch (error) {
+        console.error('Error reading characters:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error reading characters',
+            details: error.message 
+        });
+    }
+});
+
+// Helper for validating character data
+const validateCharacterData = (data) => {
+    const errors = [];
+    if (!data.system) {
+        errors.push('System is required');
+    }
+    if (!data.sections?.General?.name) {
+        errors.push('Character name is required');
+    }
+    return errors;
+};
+  
+  // Update character saving endpoint
+  app.post('/api/characters', verifyToken, async (req, res) => {
+    try {
+        const characterData = req.body;
+        
+        // Validate character data
+        const validationErrors = validateCharacterData(characterData);
+        if (validationErrors.length > 0) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Invalid character data', 
+                errors: validationErrors 
+            });
+        }
+
+        const username = req.user.username;
+        const userDir = path.join(__dirname, 'users', username);
+        const charactersDir = path.join(userDir, 'characters');
+  
+        // Create directories if needed
+        if (!fsSync.existsSync(userDir)) {
+            await fs.mkdir(userDir);
+        }
+        if (!fsSync.existsSync(charactersDir)) {
+            await fs.mkdir(charactersDir);
+        }
+  
+        const characterPath = path.join(charactersDir, `${characterData.sections.General.name}.json`);
       
-      console.log("Сервер отримав дані кидка:", rollData);
-      res.status(200).json({ message: "Дані успішно збережено.", newRoll });
-    });
+      await fs.writeFile(characterPath, JSON.stringify(characterData, null, 2));
+      
+      res.json({ success: true, message: 'Character saved successfully' });
+    } catch (error) {
+      console.error('Error saving character:', error);
+      res.status(500).json({ success: false, message: 'Error saving character' });
+    }
   });
+
+// Save roll history
+app.post('/api/roll-history', verifyToken, async (req, res) => {
+    try {
+        const { roll } = req.body;
+        const userRollHistoryFile = path.join(USERS_DIR, req.username, 'roll_history.json');
+
+        let rollHistory = { rolls: [] };
+        try {
+            const data = await fs.readFile(userRollHistoryFile, 'utf-8');
+            rollHistory = JSON.parse(data);
+        } catch (error) {
+            // Файл не існує або не може бути прочитаний, використовуємо пустий масив
+            console.log('Roll history file not found, creating new one');
+        }
+
+        rollHistory.rolls.push({
+            ...roll,
+            timestamp: new Date().toISOString()
+        });
+
+        await fs.writeFile(
+            userRollHistoryFile,
+            JSON.stringify(rollHistory, null, 2)
+        );
+
+        res.json({ message: 'Roll history saved' });
+    } catch (error) {
+        console.error('Error saving roll history:', error);
+        res.status(500).json({ message: 'Error saving roll history' });
+    }
 });
 
-// Запуск сервера
+// Get available game systems and their configs
+app.get('/api/configs', async (req, res) => {
+    try {
+        const configsDir = path.join(__dirname, "configs");
+        const systems = [];
+
+        // Читаємо директорії систем
+        const systemDirs = await fs.readdir(configsDir);
+        
+        for (const systemDir of systemDirs) {
+            const systemPath = path.join(configsDir, systemDir);
+            const stat = await fs.stat(systemPath);
+            
+            if (stat.isDirectory()) {
+                // Читаємо конфігураційні файли системи
+                const configFiles = await fs.readdir(systemPath);
+                const configs = await Promise.all(
+                    configFiles
+                        .filter(file => file.endsWith('.json'))
+                        .map(async file => {
+                            const filePath = path.join(systemPath, file);
+                            const content = await fs.readFile(filePath, 'utf-8');
+                            const config = JSON.parse(content);
+                            return {
+                                filename: file,
+                                name: config.name || file.replace('.json', ''),
+                                version: config.version || 'standard'
+                            };
+                        })
+                );
+                
+                systems.push({
+                    system: systemDir,
+                    configs: configs
+                });
+            }
+        }
+        
+        res.json(systems);
+    } catch (error) {
+        console.error('Error getting system configs:', error);
+        res.status(500).json({ message: 'Error loading system configurations' });
+    }
+});
+
+// Get specific system configuration
+app.get('/api/systems/:system/:version', async (req, res) => {
+    try {
+        const { system, version } = req.params;
+        const configPath = path.join(__dirname, "configs", system, `${version}.json`);
+        
+        const configData = await fs.readFile(configPath, 'utf-8');
+        const config = JSON.parse(configData);
+        
+        res.json(config);
+    } catch (error) {
+        console.error('Error loading system configuration:', error);
+        res.status(404).json({ message: 'System configuration not found' });
+    }
+});
+
+// Get character by name
+app.get('/api/characters/:name', verifyToken, async (req, res) => {
+    try {
+        if (!req.user?.username) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated properly'
+            });
+        }
+
+        const username = req.user.username;
+        console.log('Getting character for user:', username);
+        
+        const characterName = decodeURIComponent(req.params.name);
+        console.log('Looking for character:', characterName);
+        
+        const characterPath = path.join(__dirname, 'users', username, 'characters', `${characterName}.json`);
+        console.log('Full path:', characterPath);
+
+        if (!fsSync.existsSync(characterPath)) {
+            return res.status(404).json({ 
+                success: false, 
+                message: 'Character not found',
+                details: {
+                    characterName,
+                    username,
+                    searchPath: characterPath
+                }
+            });
+        }
+
+        const characterData = await fs.readFile(characterPath, 'utf8');
+        console.log('Character loaded successfully');
+        
+        res.json({ 
+            success: true, 
+            character: JSON.parse(characterData) 
+        });
+    } catch (error) {
+        console.error('Error reading character:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error reading character',
+            details: error.message 
+        });
+    }
+});
+
+
+
+// Handle dice rolls
+app.post('/rolls', verifyToken, async (req, res) => {
+    try {
+        const { formula, result } = req.body;
+        
+        if (!req.user?.username) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated properly'
+            });
+        }
+
+        // Save roll to history if needed
+        const username = req.user.username;
+        const userRollHistoryPath = path.join(__dirname, 'users', username, 'roll_history.json');
+        
+        let rollHistory = [];
+        if (fsSync.existsSync(userRollHistoryPath)) {
+            const historyData = await fs.readFile(userRollHistoryPath, 'utf8');
+            rollHistory = JSON.parse(historyData);
+        }
+
+        rollHistory.push({
+            formula,
+            result,
+            timestamp: new Date().toISOString()
+        });
+
+        await fs.writeFile(userRollHistoryPath, JSON.stringify(rollHistory, null, 2));
+
+        res.json({ 
+            success: true, 
+            message: 'Roll saved successfully' 
+        });
+    } catch (error) {
+        console.error('Error handling roll:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error handling roll',
+            details: error.message 
+        });
+    }
+});
+
+// Update user profile
+app.put('/api/user/profile', verifyToken, async (req, res) => {
+    try {
+        const { username, email } = req.body;
+        const currentUsername = req.user.username;
+
+        // Validate input
+        if (!username || !email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Username and email are required'
+            });
+        }
+
+        // Check if new username is already taken (if username is being changed)
+        if (username !== currentUsername) {
+            const checkUsername = await new Promise((resolve, reject) => {
+                connection.query(
+                    'SELECT id FROM users WHERE username = ? AND username != ?',
+                    [username, currentUsername],
+                    (err, results) => {
+                        if (err) reject(err);
+                        else resolve(results);
+                    }
+                );
+            });
+            
+            if (checkUsername.length > 0) {
+                return res.status(409).json({
+                    success: false,
+                    message: 'Username is already taken'
+                });
+            }
+        }
+
+        // Check if new email is already taken
+        const checkEmail = await new Promise((resolve, reject) => {
+            connection.query(
+                'SELECT id FROM users WHERE email = ? AND username != ?',
+                [email, currentUsername],
+                (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results);
+                }
+            );
+        });
+        
+        if (checkEmail.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'Email is already registered'
+            });
+        }
+
+        // Update user in database
+        await new Promise((resolve, reject) => {
+            connection.query(
+                'UPDATE users SET username = ?, email = ? WHERE username = ?',
+                [username, email, currentUsername],
+                (err, results) => {
+                    if (err) reject(err);
+                    else resolve(results);
+                }
+            );
+        });
+
+        // If username changed, rename user directory
+        if (username !== currentUsername) {
+            const oldPath = path.join(__dirname, 'users', currentUsername);
+            const newPath = path.join(__dirname, 'users', username);
+            
+            if (fsSync.existsSync(oldPath)) {
+                await fs.rename(oldPath, newPath);
+            }
+        }
+
+        res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            username,
+            email
+        });
+    } catch (error) {
+        console.error('Error updating profile:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update profile',
+            details: error.message
+        });
+    }
+});
+
+// Update character
+app.put('/api/characters/:name', verifyToken, async (req, res) => {
+  try {
+    if (!req.user?.username) {
+      return res.status(401).json({
+        success: false,
+        message: 'User not authenticated properly'
+      });
+    }
+
+    const characterName = req.params.name;
+    const userCharactersDir = path.join(__dirname, 'users', req.user.username, 'characters');
+    const characterPath = path.join(userCharactersDir, `${characterName}.json`);
+
+    // Перевіряємо чи існує файл
+    if (!fsSync.existsSync(characterPath)) {
+      return res.status(404).json({
+        success: false,
+        message: 'Character not found'
+      });
+    }
+
+    // Читаємо поточний файл персонажа
+    const currentCharacter = JSON.parse(await fs.readFile(characterPath, 'utf8'));
+    
+    // Оновлюємо тільки секції, зберігаючи інші дані
+    const updatedCharacter = {
+      ...currentCharacter,
+      sections: req.body.sections
+    };
+
+    // Зберігаємо оновлений файл
+    await fs.writeFile(characterPath, JSON.stringify(updatedCharacter, null, 2));
+
+    res.json({
+      success: true,
+      message: 'Character updated successfully',
+      character: updatedCharacter
+    });
+
+  } catch (error) {
+    console.error('Error updating character:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to update character',
+      details: error.message
+    });
+  }
+});
+
 app.listen(PORT, HOST, () => {
-  console.log(`Сервер запущено на http://${HOST}:${PORT}`);
+    console.log(`Server is running on http://${HOST}:${PORT}`);
 });

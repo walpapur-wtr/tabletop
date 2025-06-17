@@ -25,6 +25,53 @@
     flex: 1; /* Весь вміст сторінки займає все місце між хедером та футером */
     position: relative;
     z-index: 1;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.loading, .error, .no-characters {
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    color: white;
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+.no-characters {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.create-character-button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.create-character-button:hover {
+    background: #45a049;
 }
 
 .home-page__dice-roller-icon{
@@ -108,4 +155,107 @@
     font-size: 20px;
     color: white;
     cursor: pointer;
+}
+
+.welcome-section {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    color: white;
+}
+
+.welcome-section h2 {
+    margin-bottom: 1rem;
+    color: #ffa500;
+}
+
+.welcome-section p {
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.create-character-button {
+    background: #ffa500;
+    color: #333;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.create-character-button:hover {
+    background: #ffbf47;
+    transform: translateY(-2px);
+}
+
+.loading, .error {
+    width: 100%;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    color: white;
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+.character-card.create-character {
+    background: rgba(255, 165, 0, 0.1);
+    border: 2px dashed #ffa500;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.character-card.create-character:hover {
+    background: rgba(255, 165, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+.create-character-content {
+    text-align: center;
+    color: #ffa500;
+}
+
+.plus-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .home-page__content {
+        padding: 1rem;
+    }
+
+    .welcome-section {
+        padding: 2rem 1rem;
+    }
+
+    .create-character-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+.profile-content {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }

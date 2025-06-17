@@ -7,6 +7,7 @@ import CharacterPage from "./Character/CharacterSheet/CharacterSheet-page.jsx";
 import CreateCharacterPage from "./Character/CreateCharacter/CreateCharacter-page.jsx";
 import Login from './Login/LoginPage';
 import MyProfilePage from "./pages/MyProfile-page.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 import "./styles/index.css";
 
@@ -15,11 +16,28 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/characters/:name" element={<CharacterPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/create-character/:system/:version" element={<CreateCharacterPage />} />
-        <Route path="/my-profile" element={<MyProfilePage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/create-character" element={
+          <ProtectedRoute>
+            <CreateCharacterPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/create-character/:system/:version" element={
+          <ProtectedRoute>
+            <CreateCharacterPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/characters/:name" element={
+          <ProtectedRoute>
+            <CharacterPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/my-profile" element={
+          <ProtectedRoute>
+            <MyProfilePage />
+          </ProtectedRoute>
+        } />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

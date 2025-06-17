@@ -53,9 +53,8 @@ const PathForm = ({ config }) => {
     }
   };
 
-  const handleNextStep = async () => {
+  const handleNextStep = () => {
     if (currentStep < config.sections.length - 1) {
-      await saveCharacter({ ...formData, system: config.system, version: config.version }); // Додаємо system і version
       setCurrentStep((prev) => prev + 1);
     }
   };

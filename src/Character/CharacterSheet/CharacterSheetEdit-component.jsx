@@ -4,12 +4,17 @@ import { rollDice } from "../../DiceRoller/Roll-script";
 export const CharacterSheetEdit = ({ character, onSave, onCancel }) => {
   const [formData, setFormData] = useState(character.sections);
   const [sections, setSections] = useState([]);
-  const [system, setSystem] = useState(character.system);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     // Завантаження конфігураційного файлу для вибраної системи
-    import(`../../../configs/${system}.json`)
+    fetch(`/api/systems/${character.system}/${character.version}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Не вдалося завантажити конфігурацію системи');
+        }
+        return response.json();
+      })
       .then((config) => {
         setSections(config.sections);
         setErrors({});
@@ -18,10 +23,10 @@ export const CharacterSheetEdit = ({ character, onSave, onCancel }) => {
         console.error("Error loading config:", err);
         setErrors((prev) => ({
           ...prev,
-          system: "Невідома система.",
+          system: err.message || "Невідома система.",
         }));
       });
-  }, [system]);
+  }, [character.system, character.version]);
 
   const handleChange = (e, sectionName) => {
     const { name, value } = e.target;
@@ -63,7 +68,12 @@ export const CharacterSheetEdit = ({ character, onSave, onCancel }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      onSave({ system, sections: formData });
+      onSave({
+        name: character.name,
+        system: character.system,
+        version: character.version,
+        sections: formData
+      });
     }
   };
 

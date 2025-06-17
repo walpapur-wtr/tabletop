@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cra-template": "1.2.0",
     "crypto-browserify": "^3.12.1",
     "dddice-js": "^0.19.23",

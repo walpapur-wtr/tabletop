@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "General": {
+      "name": "Глім Дешнер",
+      "race": "Гном",
+      "description": "Старий чарівник",
+      "level": "3"
+    },
+    "Attributes": {
+      "strength": 14,
+      "strength-modifier": 2,
+      "dexterity": 15,
+      "dexterity-modifier": 2,
+      "constitution": 14,
+      "constitution-modifier": 2,
+      "intelligence": 12,
+      "intelligence-modifier": 1,
+      "wisdom": 17,
+      "wisdom-modifier": 3,
+      "charisma": 7,
+      "charisma-modifier": -2
+    }
+  },
+  "system": "dnd",
+  "version": "lunocus"
+}

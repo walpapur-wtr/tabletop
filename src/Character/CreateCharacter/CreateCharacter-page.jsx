@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import DnDForm from "./DnDForm-component";
 import PathfinderForm from "./PathFinderForm-component";
 import CallOfCthulhuForm from "./CustomForm-component";
+import SystemModal from "./SystemModal-component";
 import HeaderComponent from "../../components/Header-component";
 import FooterComponent from "../../components/Footer-component.jsx";
 import DiceRollerButton from "../../components/DiceRollerButton.jsx";
@@ -11,14 +12,21 @@ import "./CreateCharacter-styles.css";
 
 const CreateCharacterPage = () => {
   const { system, version } = useParams();
+  const navigate = useNavigate();
   const [formComponent, setFormComponent] = useState(null);
   const [config, setConfig] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSystemModal, setShowSystemModal] = useState(!system);
+
+  const handleSystemSelect = (selectedSystem, selectedVersion) => {
+    setShowSystemModal(false);
+    navigate(`/create-character/${selectedSystem}/${selectedVersion}`);
+  };
 
   const redirectToLogin = () => {
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -62,12 +70,19 @@ const CreateCharacterPage = () => {
       <HeaderComponent />
       {showLoginModal && (
         <ModalMessage
-          message="Please log in to create a character."
+          message="Будь ласка, увійдіть щоб створити персонажа"
           onClose={() => setShowLoginModal(false)}
           onConfirm={redirectToLogin}
         />
       )}
-      <FormComponent config={config} />
+      {showSystemModal ? (
+        <SystemModal
+          onClose={() => navigate("/")}
+          onSystemSelect={handleSystemSelect}
+        />
+      ) : (
+        FormComponent && <FormComponent config={config} />
+      )}
       <DiceRollerButton />
       <FooterComponent />
     </div>

@@ -23,58 +23,90 @@ const CharacterPage = () => {
   };
 
   useEffect(() => {
-  // Завантаження персонажа
-  fetch(`/api/characters/${name}`)
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("Персонаж не знайдений");
-      }
-      return res.json();
-    })
-    .then((data) => {
-      setCharacter(data);
-      // Формуємо правильний шлях до конфігураційного файлу
-      return fetch(`/api/systems/${data.system}/${data.version}`);
-    })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error("Конфігураційний файл не знайдений");
-      }
-      return res.json();
-    })
-    .then((configData) => {
-      setConfig(configData);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error("Error loading character or config:", err);
-      setError(err.message);
-      setLoading(false);
-    });
-}, [name]);
-
-  const handleSave = (updatedCharacter) => {
-    fetch(`/api/characters/${name}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedCharacter),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Не вдалося оновити персонажа");
+    const fetchCharacter = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError('Необхідно увійти в систему');
+          navigate('/login');
+          return;
         }
-        return res.json();
-      })
-      .then((data) => {
+
+        console.log('Fetching character:', name); // Debug log
+
+        const response = await fetch(`/api/characters/${encodeURIComponent(name)}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Server error response:', errorData); // Debug log
+          throw new Error(errorData.message || 'Помилка завантаження персонажа');
+        }
+
+        const data = await response.json();
+        console.log('Character data received:', data); // Debug log
+
+        if (!data.success || !data.character) {
+          throw new Error('Некоректні дані персонажа');
+        }
+
         setCharacter(data.character);
-        setIsEditing(false);
-      })
-      .catch((err) => {
-        console.error("Error updating character:", err);
-        setError("Не вдалося оновити персонажа.");
+        
+        // Fetch system config
+        const configResponse = await fetch(`/api/systems/${data.character.system}/${data.character.version}`);
+        
+        if (!configResponse.ok) {
+          throw new Error('Помилка завантаження конфігурації системи');
+        }
+
+        const configData = await configResponse.json();
+        setConfig(configData);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchCharacter();
+  }, [name, navigate]);
+
+  const handleSave = async (updatedCharacter) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('Необхідно увійти в систему');
+      }
+
+      const response = await fetch(`/api/characters/${encodeURIComponent(name)}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(updatedCharacter),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Не вдалося оновити персонажа");
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        throw new Error(data.message || "Не вдалося оновити персонажа");
+      }
+
+      setCharacter(data.character);
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Error updating character:", err);
+      setError(err.message || "Не вдалося оновити персонажа.");
+    }
   };
 
   const handleCancel = () => {
